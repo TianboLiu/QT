@@ -18,11 +18,11 @@ def xPDF(x, Q2, target = "proton"):
         return {"u" : xq[0], "d" : xq[1], "s" : xq[2], "c" : xq[3], "b" : xq[4],\
                 "ub" : xqb[0], "db" : xqb[1], "sb" : xqb[2], "cb" : xqb[3], "bb" : xqb[4],\
                 "g" : xg[0]}
-    else if target == "neutron":
+    elif target == "neutron":
         return {"u" : xq[1], "d" : xq[0], "s" : xq[2], "c" : xq[3], "b" : xq[4],\
                 "ub" : xqb[1], "db" : xqb[0], "sb" : xqb[2], "cb" : xqb[3], "bb" : xqb[4],\
                 "g" : xg[0]}
-    else if target == "deuteron":
+    elif target == "deuteron":
         return {"u" : xq[0] + xq[1], "d" : xq[1] + xq[0], "s" : xq[2] * 2, "c" : xq[3] * 2, "b" : xq[4] * 2,\
                 "ub" : xqb[0] + xqb[1], "db" : xqb[1] + xqb[0], "sb" : xqb[2] * 2, "cb" : xqb[3] * 2, "bb" : xqb[4] * 2,\
                 "g" : xg[0] * 2}
@@ -43,11 +43,11 @@ def zFF(z, Q2, hadron = "pi+"):
         return {"u" : zq[0], "d" : zq[1], "s" : zq[2], "c" : zq[3], "b" : zq[4],\
                 "ub" : zqb[0], "db" : zqb[1], "sb" : zqb[2], "cb" : zqb[3], "bb" : zqb[4],\
                 "g" : zg[0]}
-    else if hadron == "pi-":
+    elif hadron == "pi-":
         return {"u" : zqb[0], "d" : zqb[1], "s" : zqb[2], "c" : zqb[3], "b" : zqb[4],\
                 "ub" : zq[0], "db" : zq[1], "sb" : zq[2], "cb" : zq[3], "bb" : zq[4],\
                 "g" : zg[0]}
-    else if hadron == "pi0":
+    elif hadron == "pi0":
         return {"u" : 0.5 * (zq[0] + zqb[0]), "d" : 0.5 * (zq[1] + zqb[1]), "s" : 0.5 * (zq[2] + zqb[2]), "c" : zq[3] + zqb[3], "b" : zq[4] + zqb[4],\
                 "ub" : 0.5 * (zq[0] + zqb[0]), "db" : 0.5 * (zq[1] + zqb[1]), "sb" : 0.5 * (zq[2] + zqb[2]), "cb" : zq[3] + zqb[3], "bb" : zq[4] + zqb[4],\
                 "g" : zg[0]}
