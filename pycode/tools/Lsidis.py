@@ -5,7 +5,7 @@ import os, sys
 import lhapdf
 
 pdfs = lhapdf.mkPDF("CJ15lo", 0)
-ffpion = lhapdf.mkPDF("DSSFFlo", 0211)
+ffpion = lhapdf.mkPDF("DSSFFlo", 211)
 
 
 def Test():
