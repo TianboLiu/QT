@@ -26,7 +26,7 @@ def xPDF(x, Q2, target = "proton"):
         return {"u" : xq[0] + xq[1], "d" : xq[1] + xq[0], "s" : xq[2] * 2, "c" : xq[3] * 2, "b" : xq[4] * 2,\
                 "ub" : xqb[0] + xqb[1], "db" : xqb[1] + xqb[0], "sb" : xqb[2] * 2, "cb" : xqb[3] * 2, "bb" : xqb[4] * 2,\
                 "g" : xg[0] * 2}
-    else if target == "helium-3":
+    elif target == "helium-3":
         return {"u" : xq[0] * 2 + xq[1], "d" : xq[1] * 2 + xq[0], "s" : xq[2] * 3, "c" : xq[3] * 3, "b" : xq[4] * 3,\
                 "ub" : xqb[0] * 2 + xqb[1], "db" : xqb[1] * 2 + xqb[0], "sb" : xqb[2] * 3, "cb" : xqb[3] * 3, "bb" : xqb[4] * 3,\
                 "g" : xg[0] * 3}
