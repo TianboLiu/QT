@@ -56,6 +56,22 @@ def zFF(z, Q2, hadron = "pi+"):
         sys.exit()
         return
 
+def F2(x, Q2, target = "proton", NC = "gamma"):
+    xf = xPDF(x, Q2, target)
+    if NC == "gamma":
+        return (2.0 / 3.0)**2 * (xf["u"] + xf["ub"] + xf["c"] + xf["cb"]) + (1.0 / 3.0)**2 * (xf["d"] + xf["db"] + xf["s"] + xf["sb"] + xf["b"] + xf["bb"])
+    elif NC == "gammaZ":
+        return 2.0 * (2.0 / 3.0) * (0.5 - 2.0 * 2.0 / 3.0 * 0.23) * (xf["u"] + xf["ub"] + xf["c"] + xf["cb"]) + 2.0 * (-1.0 / 3.0) * (-0.5 + 2.0 * 1.0 / 3.0 * 0.23) * (xf["d"] + xf["db"] + xf["s"] + xf["sb"] + xf["b"] + xf["bb"])
+    elif NC == "Z":
+        return ((0.5 - 2.0 * 2.0 / 3.0 * 0.23)**2 + 0.5**2) * (xf["u"] + xf["ub"] + xf["c"] + xf["cb"]) + ((-0.5 + 2.0 * 1.0 / 3.0 * 0.23)**2 + 0.5**2) * (xf["d"] + xf["db"] + xf["s"] + xf["sb"] + xf["b"] + xf["bb"])
+    else:
+        print "F2 : wrong NC option!"
+        sys.exit()
+
+def F1(x, Q2, target = "proton", NC = "gamma"):
+    return F2(x, Q2, target, NC) / (2.0 * x)
+
+    
 def Test():
     return
                 
