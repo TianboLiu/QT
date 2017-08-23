@@ -15,6 +15,7 @@ def LOADDATA(filename, oldset = np.array([]).reshape(0,8)):
 def chi2(para):
     sum = 0.0
     for item in datalist:
+        print item[4]
         if item[4] < 1.5:#Q2
             print item
             sum += (model_0(x = item[5], Q2 = item[4], z = item[6], Pt = item[7], target = "proton", par = para) - item[1])**2 / (item[2]**2 + item[3]**2)
