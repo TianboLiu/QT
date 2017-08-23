@@ -126,6 +126,7 @@ namespace FIT{
 
   int Npt = 0;
   double Value[3000], Variable[3000][4], Error[3000][2];
+  TString Target[3000], Hadron[3000];
 
   double Parameters[20];
 
@@ -149,7 +150,6 @@ namespace FIT{
     for (int i = 0; i < skiprows; i++)
       infile.getline(ltmp, 300);
     double var[4], value, error[2], tmp;
-    TString Target[3000], Hadron[3000];
     while (infile >> tmp >> value >> error[0] >> error[1] >> var[1] >> var[0] >> var[2] >> var[3]){
       if (CheckValue(var, SelectionT, SelectionTdelta)){
 	for (int i = 0; i < 4; i++)
@@ -167,6 +167,17 @@ namespace FIT{
     infile.close();
     return 0;
   }
+
+  double Chi2(const double * par){
+    double sum = 0.0;
+    for (int i = 0; i < Npt; i++){
+      sum += pow(SIDIS::Multiplicity(Variable[i], par, Target[i].Data(), Hadron[i].Data()) - Value[i], 2) / (pow(Error[i][0], 2) + pow(Error[i][1], 2));
+    }
+    return sum;
+  }
+
+
+
 
 
 
