@@ -7,8 +7,9 @@ from Lsidis import *
 
 def LOADDATA(filename, oldset = np.array([])):
     dataset = np.loadtxt(filename, skiprows = 20)
-    newset = np.vstack(oldset, dataset)
+    newset = np.vstack((oldset, dataset))
     return newset
+
 
 
 
