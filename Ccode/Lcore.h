@@ -8,6 +8,9 @@
 
 #include "LHAPDF/LHAPDF.h"
 
+#include "TString.h"
+
+
 using namespace std;
 
 const LHAPDF::PDF * pdfs = LHAPDF::mkPDF("CJ15lo", 0);
@@ -96,7 +99,6 @@ namespace DIS{
 }
 
 namespace SIDIS{
-  double Parameters[20];
 
   double (* FUUT)(const double * var, const double * par, const char * target, const char * hadron);
 
@@ -118,14 +120,57 @@ namespace SIDIS{
     return result;
   }
 
+}
 
+namespace FIT{
 
+  int Npt = 0;
+  double Value[3000], Variable[3000][4], Error[3000][2];
+
+  double Parameters[20];
+
+  double SelectionT[4];
+  double SelectionTdelta[4];
+
+  int PrintLevel = 1;
+
+  int CheckValue(const double x[], const double t[], const double dt[]){
+    if (pow(x[0] - t[0], 2) < pow(dt[0], 2) &&
+	pow(x[1] - t[1], 2) < pow(dt[1], 2) && 
+	pow(x[2] - t[2], 2) < pow(dt[2], 2) && 
+	pow(x[3] - t[3], 2) < pow(dt[3], 2)
+	) return 1;
+    else return 0;
+  }
+
+  int LoadData(const char * filename, const int skiprows = 19, const char * target = "proton", const char * hadron = "pi+"){
+    ifstream infile(filename);
+    char ltmp[300];
+    for (int i = 0; i < skiprows; i++)
+      infile.getline(ltmp, 300);
+    double var[4], value, error[2], tmp;
+    TString Target[3000], Hadron[3000];
+    while (infile >> tmp >> value >> error[0] >> error[1] >> var[1] >> var[0] >> var[2] >> var[3]){
+      if (CheckValue(var, SelectionT, SelectionTdelta)){
+	for (int i = 0; i < 4; i++)
+	  Variable[Npt][i] = var[i];
+	Value[Npt] = value;
+	Error[Npt][0] = error[0];
+	Error[Npt][1] = error[1];
+	Target[Npt] = target;
+	Hadron[Npt] = hadron;
+	if (PrintLevel > 0)
+	  cout << "  " << Npt << " " << var[0] << " " << var[1] << " " << var[2] << " " << var[3] << " " << value << " " << error[0] << " " << error[1] << " " << Target[Npt].Data() << " " << Hadron[Npt].Data() << endl;
+	Npt++;
+      }
+    }
+    infile.close();
+    return 0;
+  }
 
 
 
 }
-
-
 
 
 
