@@ -194,7 +194,7 @@ namespace FIT{
     ROOT::Math::Minimizer * min = ROOT::Math::Factory::CreateMinimizer("Minuit2", "Migrad");
     min->SetMaxFunctionCalls(100000);
     min->SetTolerance(1.0e-6);
-    min->SetPrintLevel(0);
+    min->SetPrintLevel(1);
     ROOT::Math::Functor f(&Chi2, NPAR);
     min->SetFunction(f);
     for (int i = 0; i < NPAR; i++){
@@ -208,6 +208,12 @@ namespace FIT{
     return chi2;
   }
 
+  int Compare(){
+    for (int i = 0; i < Npt; i++){
+      cout << SIDIS::Multiplicity(Variable[i], Parameters, Target[i].Data(), Hadron[i].Data()) << " -- " << Value[i] << endl;
+    }
+    return 0;
+  }
 
 
 }
