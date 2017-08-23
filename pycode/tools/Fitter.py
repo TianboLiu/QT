@@ -5,25 +5,24 @@ from scipy.optimize import minimize
 import numpy as np
 from Lsidis import *
 
+datalist = np.array([]).reshape(0,8)
+
 def LOADDATA(filename, oldset = np.array([]).reshape(0,8)):
     dataset = np.loadtxt(filename, skiprows = 19)
     newset = np.vstack((oldset, dataset))
     return newset
 
+def chi2(para):
+    sum = 0.0
+    for item in datalist:
+        if item[4] < 1.5:#Q2
+            sum += (model_0(x = item[5], Q2 = item[4], z = item[6], Pt = item[7], target = "proton", par = para) - item[1])**2 / (item[2]**2 + item[3]**@)
+    return sum
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+def main():
+    LOADDATA("../Data/SIDIS/hermes.proton.zxpt-3D.vmsub.mults_piplus.list",datalist)
+    res = minimize(chi2, [0.5, 0.5], method='Nelder-Mead', tol=1e-6)
+    return res
 
 
 
