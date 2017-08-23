@@ -65,7 +65,9 @@ def model_0(x, Q2, z, Pt, par, target = "proton", hadron = "pi+"):#gaussian
     zD = zFF(z, Q2, hadron)
     W = z**2 * par[0] + par[1]
     factor = exp(-Pt**2 / W) / (PI * W * z)
-    return factor * ( (2.0 / 3.0)**2 * (xf["u"] + xf["ub"] + xf["c"] + xf["cb"]) + (1.0 / 3.0)**2 * (xf["d"] + xf["db"] + xf["s"] + xf["sb"] + xf["b"] + xf["bb"]) )
+    FUUT = factor * ( (2.0 / 3.0)**2 * (xf["u"] + xf["ub"] + xf["c"] + xf["cb"]) + (1.0 / 3.0)**2 * (xf["d"] + xf["db"] + xf["s"] + xf["sb"] + xf["b"] + xf["bb"]) )
+    multi = 2.0 * PI * Pt * FUUT / FT(x, Q2, target)#GeV^-1
+    return multi
     
 def Test():
     return
