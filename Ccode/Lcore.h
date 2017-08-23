@@ -9,7 +9,9 @@
 #include "LHAPDF/LHAPDF.h"
 
 #include "TString.h"
-
+#include "Math/Minimizer.h"
+#include "Math/Factory.h"
+#include "Math/Functor.h"
 
 using namespace std;
 
@@ -104,13 +106,25 @@ namespace SIDIS{
 
   double Model_FUUT_0(const double * var, const double * par, const char * target = "proton", const char * hadron = "pi+"){
     //var: x, Q2, z, Pt
-    double Pt2 = var[2] * var[2] * par[0] + par[1];
+    double Pt2 = var[2] * var[2] * par[0] * par[0] + par[1] * par[1];
     double factor = exp(- var[3] * var[3] / Pt2) / (M_PI * Pt2);
     double xf[13], zD[13];
     DIS::xPDF(xf, var[0], var[1], target);
     DIS::zFF(zD, var[2], var[1], hadron);
     double result = factor / var[2] * (pow(2.0/3.0, 2) * (xf[2] * zD[2] + xf[4] * zD[4] + xf[6] * zD[6] + xf[2+6] * zD[2+6] + xf[4+6] * zD[4+6] + xf[6+6] * zD[6+6])
-			      + pow(-1.0/3.0, 2) * (xf[1] * zD[1] + xf[3] * zD[3] + xf[5] * zD[5] + xf[1+6] * zD[1+6] + xf[3+6] * zD[3+6] + xf[5+6] * zD[5+6]));
+				       + pow(-1.0/3.0, 2) * (xf[1] * zD[1] + xf[3] * zD[3] + xf[5] * zD[5] + xf[1+6] * zD[1+6] + xf[3+6] * zD[3+6] + xf[5+6] * zD[5+6]));
+    return result;
+  }
+
+  double Model_FUUT_1(const double * var, const double * par, const char * target = "proton", const char * hadron = "pi+"){
+    //var: x, Q2, z, Pt
+    double Pt2 = par[0] * par[0] * pow(var[0], par[1]) + par[2] * par[2] * pow(var[2], par[3]);
+    double factor = exp(- var[3] * var[3] / Pt2) / (M_PI * Pt2);                                                                                          
+    double xf[13], zD[13];        
+    DIS::xPDF(xf, var[0], var[1], target);
+    DIS::zFF(zD, var[2], var[1], hadron);
+    double result = factor / var[2] * (pow(2.0/3.0, 2) * (xf[2] * zD[2] + xf[4] * zD[4] + xf[6] * zD[6] + xf[2+6] * zD[2+6] + xf[4+6] * zD[4+6] + xf[6+6] * zD[6+6])                                                              
+				       + pow(-1.0/3.0, 2) * (xf[1] * zD[1] + xf[3] * zD[3] + xf[5] * zD[5] + xf[1+6] * zD[1+6] + xf[3+6] * zD[3+6] + xf[5+6] * zD[5+6]));
     return result;
   }
 
@@ -176,8 +190,23 @@ namespace FIT{
     return sum;
   }
 
-
-
+  double Minimize(const int NPAR, const double * init){
+    ROOT::Math::Minimizer * min = ROOT::Math::Factory::CreateMinimizer("Minuit2", "Migrad");
+    min->SetMaxFunctionCalls(100000);
+    min->SetTolerance(1.0e-6);
+    min->SetPrintLevel(0);
+    ROOT::Math::Functor f(&Chi2, NPAR);
+    min->SetFunction(f);
+    for (int i = 0; i < NPAR; i++){
+      min->SetVariable(i, Form("p%d", i), init[i], 1.0e-4);
+    }
+    min->Minimize();
+    const double * xs = min->X();
+    for (int i = 0; i < NPAR; i++)
+      Parameters[i] = xs[i];
+    const double chi2 = min->MinValue();
+    return chi2;
+  }
 
 
 
