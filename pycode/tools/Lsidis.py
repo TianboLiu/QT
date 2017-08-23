@@ -56,6 +56,21 @@ def zFF(z, Q2, hadron = "pi+"):
         sys.exit()
         return
 
+def FT(x, Q2, target = "proton"):
+    xf = xPDF(x, Q2, target)
+    return (2.0 / 3.0)**2 * (xf["u"] + xf["ub"] + xf["c"] + xf["cb"]) + (1.0 / 3.0)**2 * (xf["d"] + xf["db"] + xf["s"] + xf["sb"] + xf["b"] + xf["bb"])
+    
+def model_0(x, Q2, z, Pt, *par, target = "proton", hadron = "pi+"):#gaussian
+    xf = xPDF(x, Q2, target)
+    zD = zFF(z, Q2, hadron)
+    W = z**2 * par[0] + par[1]
+    factor = exp(-Pt**2 / W) / (PI * W * z)
+    return factor * ( (2.0 / 3.0)**2 * (xf["u"] + xf["ub"] + xf["c"] + xf["cb"]) + (1.0 / 3.0)**2 * (xf["d"] + xf["db"] + xf["s"] + xf["sb"] + xf["b"] + xf["bb"]) )
+    
+def Test():
+    return
+                
+    
 def F2(x, Q2, target = "proton", NC = "gamma"):
     xf = xPDF(x, Q2, target)
     if NC == "gamma":
@@ -70,12 +85,6 @@ def F2(x, Q2, target = "proton", NC = "gamma"):
 
 def F1(x, Q2, target = "proton", NC = "gamma"):
     return F2(x, Q2, target, NC) / (2.0 * x)
-
-    
-def Test():
-    return
-                
-
 
 
 if __name__ == "__main__":
