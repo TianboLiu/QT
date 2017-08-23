@@ -13,6 +13,7 @@ def LOADDATA(filename, oldset = np.array([]).reshape(0,8)):
     return newset
 
 def chi2(para):
+    global datalist
     sum = 0.0
     for item in datalist:
         print item[4]
