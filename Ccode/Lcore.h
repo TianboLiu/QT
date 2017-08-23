@@ -99,7 +99,6 @@ namespace SIDIS{
   double Parameters[20];
 
   double (* FUUT)(const double * var, const double * par, const char * target, const char * hadron);
-  double (* Multiplicity)(const double * var, const double * par, const char * target, const char * hadron);
 
   double Model_FUUT_0(const double * var, const double * par, const char * target = "proton", const char * hadron = "pi+"){
     //var: x, Q2, z, Pt
@@ -108,14 +107,13 @@ namespace SIDIS{
     double xf[13], zD[13];
     DIS::xPDF(xf, var[0], var[1], target);
     DIS::zFF(zD, var[2], var[1], hadron);
-    double result = factor * (pow(2.0/3.0, 2) * (xf[2] * zD[2] + xf[4] * zD[4] + xf[6] * zD[6] + xf[2+6] * zD[2+6] + xf[4+6] * zD[4+6] + xf[6+6] * zD[6+6])
-			      + pow(-1.0/3.0, 2) * (xf[1] * zD[1] + xf[3] * zD[3] + xf[5] * zD[5] + xf[1+6] * zD[1+6] + xf[3+6] * zD[3+6] + xf[5+6] * zD[5+6])) / z;
+    double result = factor / var[2] * (pow(2.0/3.0, 2) * (xf[2] * zD[2] + xf[4] * zD[4] + xf[6] * zD[6] + xf[2+6] * zD[2+6] + xf[4+6] * zD[4+6] + xf[6+6] * zD[6+6])
+			      + pow(-1.0/3.0, 2) * (xf[1] * zD[1] + xf[3] * zD[3] + xf[5] * zD[5] + xf[1+6] * zD[1+6] + xf[3+6] * zD[3+6] + xf[5+6] * zD[5+6]));
     return result;
   }
 
-  double Model_Multi_0(const double * var, const double * par, const char * target = "proton", const char * hadron = "pi+"){
+  double Multiplicity(const double * var, const double * par, const char * target = "proton", const char * hadron = "pi+"){
     //var: x, Q2, z, Pt
-    double Pt2 = var[2] * var[2] * par[0] + par[1];
     double result = 2.0 * M_PI * var[3] * Model_FUUT_0(var, par, target, hadron) / DIS::FT(var, target);
     return result;
   }
