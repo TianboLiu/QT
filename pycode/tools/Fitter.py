@@ -23,7 +23,7 @@ def chi2(para):
 
 def main():
     global datalist
-    datalist = LOADDATA("Data/SIDIS/hermes.proton.zxpt-3D.vmsub.mults_piplus.list",datalist)
+    datalist = LOADDATA("Data/SIDIS/hermes.proton.zxpt-3D.vmsub.mults_piplus.list")
     res = minimize(chi2, [0.5, 0.5], method='Nelder-Mead', tol=1e-6)
     return res
 
