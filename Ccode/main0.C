@@ -36,7 +36,7 @@ int main(const int argc, const char * argv[]){
       LoadData("path/Data/SIDIS/hermes.deuteron.zxpt-3D.vmsub.mults_piminus.list", 19, "deuteron", "pi-");
       
       Minimize(2, par);
-      fprintf(fs, "%.2f\t%d\t%.4f\t%.4f\t%.4f\n", SelectionT[1], Npt, Parameters[2], Parameters[0], Parameters[1]);
+      fprintf(fs, "%.2f\t%d\t%.2f\t%.4f\t%.4f\n", SelectionT[1], Npt, Parameters[2], Parameters[0], Parameters[1]);
     }
     fclose(fs);
   }
@@ -63,7 +63,7 @@ int main(const int argc, const char * argv[]){
       LoadData("path/Data/SIDIS/hermes.deuteron.zxpt-3D.vmsub.mults_piminus.list", 19, "deuteron", "pi-");
       
       Minimize(2, par);
-      fprintf(fs, "%.2f\t%d\t%.4f\t%.4f\t%.4f\n", SelectionT[1], Npt, Parameters[2], Parameters[0], Parameters[1]);
+      fprintf(fs, "%.2f\t%d\t%.2f\t%.4f\t%.4f\n", SelectionT[1], Npt, Parameters[2], Parameters[0], Parameters[1]);
     }
     fclose(fs);
   }
@@ -90,7 +90,7 @@ int main(const int argc, const char * argv[]){
       LoadData("path/Data/SIDIS/hermes.deuteron.zxpt-3D.vmsub.mults_piminus.list", 19, "deuteron", "pi-");
       
       Minimize(2, par);
-      fprintf(fs, "%.2f\t%d\t%.4f\t%.4f\t%.4f\n", SelectionT[1], Npt, Parameters[2], Parameters[0], Parameters[1]);
+      fprintf(fs, "%.2f\t%d\t%.2f\t%.4f\t%.4f\n", SelectionT[1], Npt, Parameters[2], Parameters[0], Parameters[1]);
     }
     fclose(fs);
   }
@@ -117,7 +117,7 @@ int main(const int argc, const char * argv[]){
       LoadData("path/Data/SIDIS/hermes.deuteron.zxpt-3D.vmsub.mults_piminus.list", 19, "deuteron", "pi-");
       
       Minimize(2, par);
-      fprintf(fs, "%.2f\t%d\t%.4f\t%.4f\t%.4f\n", SelectionT[1], Npt, Parameters[2], Parameters[0], Parameters[1]);
+      fprintf(fs, "%.2f\t%d\t%.2f\t%.4f\t%.4f\n", SelectionT[1], Npt, Parameters[2], Parameters[0], Parameters[1]);
     }
     fclose(fs);
   }

@@ -154,7 +154,8 @@ namespace SIDIS{
   
   double Multiplicity(const double * var, const double * par, const char * target = "proton", const char * hadron = "pi+"){
     //var: x, Q2, z, Pt
-    double result = 2.0 * M_PI * var[3] * FUUT(var, par, target, hadron) / DIS::FT(var, target);
+    double factor = (1.0 + 2.0 * var[0] * Mp * Mp / var[1]);
+    double result = factor * 2.0 * M_PI * var[3] * FUUT(var, par, target, hadron) / DIS::FT(var, target);
     return result;
   }
 
