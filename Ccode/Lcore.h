@@ -118,7 +118,7 @@ namespace SIDIS{
 
   double Model_FUUT_1(const double * var, const double * par, const char * target = "proton", const char * hadron = "pi+"){
     //var: x, Q2, z, Pt
-    double Pt2 = var[2] * var[2] * par[0] * par[0] * pow(var[0], par[1]) + par[2] * par[2] * pow(var[2], par[3]);
+    double Pt2 = var[2] * var[2] * par[0] * par[0] + par[1] * par[1] * pow(var[2], par[2]);
     double factor = exp(- var[3] * var[3] / Pt2) / (M_PI * Pt2);                                                                                          
     double xf[13], zD[13];        
     DIS::xPDF(xf, var[0], var[1], target);
@@ -130,7 +130,7 @@ namespace SIDIS{
 
   double Multiplicity(const double * var, const double * par, const char * target = "proton", const char * hadron = "pi+"){
     //var: x, Q2, z, Pt
-    double result = 2.0 * M_PI * var[3] * Model_FUUT_0(var, par, target, hadron) / DIS::FT(var, target);
+    double result = 2.0 * M_PI * var[3] * FUUT(var, par, target, hadron) / DIS::FT(var, target);
     return result;
   }
 
@@ -193,7 +193,7 @@ namespace FIT{
   double Minimize(const int NPAR, const double * init){
     ROOT::Math::Minimizer * min = ROOT::Math::Factory::CreateMinimizer("Minuit2", "Migrad");
     min->SetMaxFunctionCalls(100000);
-    min->SetTolerance(1.0e-6);
+    min->SetTolerance(1.0e-4);
     min->SetPrintLevel(1);
     ROOT::Math::Functor f(&Chi2, NPAR);
     min->SetFunction(f);

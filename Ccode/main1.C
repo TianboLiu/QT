@@ -23,9 +23,9 @@ int main(const int argc, const char * argv[]){
     FILE * fs = fopen("path/gallery/fitparameters_model1_a.dat","w");
     fprintf(fs, "hermes data proton and deuteron\n");
     fprintf(fs, "z < 0.6, 0.2 < Pt < 0.9\n\n");
-    fprintf(fs, "Q2\tNpoints\tChi2\tp0\tp1\tp2\tp3\n");
+    fprintf(fs, "Q2\tNpoints\tChi2\tp0\tp1\tp2\n");
     
-    double par[4] = {0.5, 0.5, 0.0, 0.0};
+    double par[3] = {0.5, 0.5, 0.0};
     for (int i = 0; i < 6; i++){
       Npt = 0;
       SelectionT[1] = Q2list[i];
@@ -35,8 +35,8 @@ int main(const int argc, const char * argv[]){
       LoadData("path/Data/SIDIS/hermes.deuteron.zxpt-3D.vmsub.mults_piplus.list", 19, "deuteron", "pi+");
       LoadData("path/Data/SIDIS/hermes.deuteron.zxpt-3D.vmsub.mults_piminus.list", 19, "deuteron", "pi-");
       
-      Minimize(4, par);
-      fprintf(fs, "%.2f\t%d\t%.4f\t%.4f\t%.4f\t%.4f\t%.4f\n", SelectionT[1], Npt, Parameters[4], Parameters[0], Parameters[1], Parameters[2], Parameters[3]);
+      Minimize(3, par);
+      fprintf(fs, "%.2f\t%d\t%.4f\t%.4f\t%.4f\t%.4f\n", SelectionT[1], Npt, Parameters[3], Parameters[0], Parameters[1], Parameters[2]);
     }
     fclose(fs);
   }
@@ -50,9 +50,9 @@ int main(const int argc, const char * argv[]){
     FILE * fs = fopen("path/gallery/fitparameters_model1_b.dat","w");
     fprintf(fs, "hermes data proton and deuteron\n");
     fprintf(fs, "z < 0.7, 0.2 < Pt < 0.9\n\n");
-    fprintf(fs, "Q2\tNpoints\tChi2\tp0\tp1\tp2\tp3\n");
+    fprintf(fs, "Q2\tNpoints\tChi2\tp0\tp1\tp2\n");
     
-    double par[2] = {0.5, 0.5};
+    double par[3] = {0.5, 0.5, 0.0};
     for (int i = 0; i < 6; i++){
       Npt = 0;
       SelectionT[1] = Q2list[i];
@@ -62,8 +62,8 @@ int main(const int argc, const char * argv[]){
       LoadData("path/Data/SIDIS/hermes.deuteron.zxpt-3D.vmsub.mults_piplus.list", 19, "deuteron", "pi+");
       LoadData("path/Data/SIDIS/hermes.deuteron.zxpt-3D.vmsub.mults_piminus.list", 19, "deuteron", "pi-");
       
-      Minimize(2, par);
-      fprintf(fs, "%.2f\t%d\t%.4f\t%.4f\t%.4f\t%.4f\t%.4f\n", SelectionT[1], Npt, Parameters[4], Parameters[0], Parameters[1], Parameters[2], Parameters[3]);
+      Minimize(3, par);
+      fprintf(fs, "%.2f\t%d\t%.4f\t%.4f\t%.4f\t%.4f\n", SelectionT[1], Npt, Parameters[3], Parameters[0], Parameters[1], Parameters[2]);
     }
     fclose(fs);
   }
@@ -77,9 +77,9 @@ int main(const int argc, const char * argv[]){
     FILE * fs = fopen("path/gallery/fitparameters_model1_c.dat","w");
     fprintf(fs, "hermes data proton and deuteron\n");
     fprintf(fs, "z < 0.7, all Pt \n\n");
-    fprintf(fs, "Q2\tNpoints\tChi2\tp0\tp1\tp2\tp3\n");
+    fprintf(fs, "Q2\tNpoints\tChi2\tp0\tp1\tp2\n");
     
-    double par[2] = {0.5, 0.5};
+    double par[3] = {0.5, 0.5, 0.0};
     for (int i = 0; i < 6; i++){
       Npt = 0;
       SelectionT[1] = Q2list[i];
@@ -89,8 +89,8 @@ int main(const int argc, const char * argv[]){
       LoadData("path/Data/SIDIS/hermes.deuteron.zxpt-3D.vmsub.mults_piplus.list", 19, "deuteron", "pi+");
       LoadData("path/Data/SIDIS/hermes.deuteron.zxpt-3D.vmsub.mults_piminus.list", 19, "deuteron", "pi-");
       
-      Minimize(2, par);
-      fprintf(fs, "%.2f\t%d\t%.4f\t%.4f\t%.4f\t%.4f\t%.4f\n", SelectionT[1], Npt, Parameters[4], Parameters[0], Parameters[1], Parameters[2], Parameters[3]);
+      Minimize(3, par);
+      fprintf(fs, "%.2f\t%d\t%.4f\t%.4f\t%.4f\t%.4f\t%.4f\n", SelectionT[1], Npt, Parameters[3], Parameters[0], Parameters[1], Parameters[2]);
     }
     fclose(fs);
   }
@@ -106,7 +106,7 @@ int main(const int argc, const char * argv[]){
     fprintf(fs, "all z, all Pt \n\n");
     fprintf(fs, "Q2\tNpoints\tChi2\tp0\tp1\tp2\tp3\n");
     
-    double par[2] = {0.5, 0.5};
+    double par[3] = {0.5, 0.5, 0.0};
     for (int i = 0; i < 6; i++){
       Npt = 0;
       SelectionT[1] = Q2list[i];
@@ -116,8 +116,8 @@ int main(const int argc, const char * argv[]){
       LoadData("path/Data/SIDIS/hermes.deuteron.zxpt-3D.vmsub.mults_piplus.list", 19, "deuteron", "pi+");
       LoadData("path/Data/SIDIS/hermes.deuteron.zxpt-3D.vmsub.mults_piminus.list", 19, "deuteron", "pi-");
       
-      Minimize(2, par);
-      fprintf(fs, "%.2f\t%d\t%.4f\t%.4f\t%.4f\t%.4f\t%.4f\n", SelectionT[1], Npt, Parameters[4], Parameters[0], Parameters[1], Parameters[2], Parameters[3]);
+      Minimize(3, par);
+      fprintf(fs, "%.2f\t%d\t%.4f\t%.4f\t%.4f\t%.4f\n", SelectionT[1], Npt, Parameters[3], Parameters[0], Parameters[1], Parameters[2]);
     }
     fclose(fs);
   }
