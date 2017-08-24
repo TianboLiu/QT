@@ -205,6 +205,7 @@ namespace FIT{
     for (int i = 0; i < NPAR; i++)
       Parameters[i] = xs[i];
     const double chi2 = min->MinValue();
+    Parameters[NPAR] = chi2;
     return chi2;
   }
 
