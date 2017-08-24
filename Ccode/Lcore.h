@@ -104,7 +104,7 @@ namespace SIDIS{
 
   double (* FUUT)(const double * var, const double * par, const char * target, const char * hadron);
 
-  double Model_FUUT_0(const double * var, const double * par, const char * target = "proton", const char * hadron = "pi+"){
+  double Model_FUUT_0(const double * var, const double * par, const char * target = "proton", const char * hadron = "pi+"){//simple gaussian
     //var: x, Q2, z, Pt
     double Pt2 = var[2] * var[2] * par[0] * par[0] + par[1] * par[1];
     double factor = exp(- var[3] * var[3] / Pt2) / (M_PI * Pt2);
@@ -116,7 +116,7 @@ namespace SIDIS{
     return result;
   }
 
-  double Model_FUUT_1(const double * var, const double * par, const char * target = "proton", const char * hadron = "pi+"){
+  double Model_FUUT_1(const double * var, const double * par, const char * target = "proton", const char * hadron = "pi+"){//gaussian z-dep
     //var: x, Q2, z, Pt
     double Pt2 = var[2] * var[2] * par[0] * par[0] + par[1] * par[1] * pow(var[2], par[2]);
     double factor = exp(- var[3] * var[3] / Pt2) / (M_PI * Pt2);                                                                                          
