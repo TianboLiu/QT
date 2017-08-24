@@ -118,7 +118,7 @@ namespace SIDIS{
 
   double Model_FUUT_1(const double * var, const double * par, const char * target = "proton", const char * hadron = "pi+"){//gaussian z-dep
     //var: x, Q2, z, Pt
-    double Pt2 = var[2] * var[2] * par[0] * par[0] + par[1] * par[1] * pow(var[2], par[2]);
+    double Pt2 = var[2] * var[2] * par[0] * par[0] + par[1] * par[1] * (1.0 + par[2] * var[2]);
     double factor = exp(- var[3] * var[3] / Pt2) / (M_PI * Pt2);                                                                                          
     double xf[13], zD[13];        
     DIS::xPDF(xf, var[0], var[1], target);
@@ -154,7 +154,8 @@ namespace SIDIS{
   
   double Multiplicity(const double * var, const double * par, const char * target = "proton", const char * hadron = "pi+"){
     //var: x, Q2, z, Pt
-    double factor = (1.0 + 2.0 * var[0] * Mp * Mp / var[1]);
+    //double factor = (1.0 + 2.0 * var[0] * Mp * Mp / var[1]);
+    double factor = 1.0;
     double result = factor * 2.0 * M_PI * var[3] * FUUT(var, par, target, hadron) / DIS::FT(var, target);
     return result;
   }
