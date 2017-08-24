@@ -128,6 +128,30 @@ namespace SIDIS{
     return result;
   }
 
+  double Model_FUUT_2(const double * var, const double * par, const char * target = "proton", const char * hadron = "pi+"){//gaussian flavor-dep
+    //var: x, Q2, z, Pt
+    double ktv = par[0];
+    double kts = par[1];
+    double ptv = par[2];
+    double pts = par[3];
+    double z = var[2];
+    double Pt2[13] = {0.0, z*z*ktv*ktv + pts*pts, z*z*ktv*ktv + ptv*ptv, z*z*kts*kts + pts*pts, z*z*kts*kts + pts*pts, z*z*kts*kts + pts*pts, z*z*kts*kts + pts*pts,
+		      z*z*kts*kts + ptv*ptv, z*z*kts*kts + pts*pts, z*z*kts*kts + pts*pts, z*z*kts*kts + pts*pts, z*z*kts*kts + pts*pts, z*z*kts*kts + pts*pts};
+    if (strcmp(hadron, "pi-") == 0){
+      DIS::Exchange(Pt2[1], Pt2[2]);
+      DIS::Exchange(Pt2[1+6], Pt2[2+6]);
+    }      
+    double xf[13], zD[13];
+    DIS::xPDF(xf, var[0], var[1], target);
+    DIS::zFF(zD, var[2], var[1], hadron);
+    double factor[13];
+    for (int i = 0; i < 13; i++)
+      factor[i] = exp(-var[3] * var[3] / Pt2[i]) / (M_PI * Pt2[i]);
+    double result = pow(2.0/3.0, 2) * (xf[2] * zD[2] * factor[2] + xf[4] * zD[4] * factor[4] + xf[6] * zD[6] * factor[6] + xf[2+6] * zD[2+6] * factor[2+6] + xf[4+6] * zD[4+6] * factor[4+6] + xf[6+6] * zD[6+6] * factor[6+6])
+      + pow(-1.0/3.0, 2) * (xf[1] * zD[1] * factor[1] + xf[3] * zD[3] * factor[3] + xf[5] * zD[5] * factor[5] + xf[1+6] * zD[1+6] * factor[1+6] + xf[3+6] * zD[3+6] * factor[3+6] + xf[5+6] * zD[5+6] * factor[5+6]);
+    return result / z;
+  }
+  
   double Multiplicity(const double * var, const double * par, const char * target = "proton", const char * hadron = "pi+"){
     //var: x, Q2, z, Pt
     double result = 2.0 * M_PI * var[3] * FUUT(var, par, target, hadron) / DIS::FT(var, target);
