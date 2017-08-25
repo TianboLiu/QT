@@ -48,7 +48,7 @@ int main(const int argc, const char * argv[]){
     hB->GetYaxis()->SetTitleOffset(1.15);
     hB->GetYaxis()->SetLabelSize(0.055);
     hB->GetYaxis()->SetNdivisions(6, 5, 0);
-    hB->SetMaximum(30.0);
+    hB->SetMaximum(20.0);
     hB->SetMinimum(0.0);
 
     double tmp, ptmax, chi2;
@@ -57,7 +57,7 @@ int main(const int argc, const char * argv[]){
     latex.SetTextSize(0.05);
     latex.SetTextAlign(12);
     TGraph * g0;
-    int Clist[6] = {1, 4, 2, 5, 6, 7};
+    int Clist[6] = {1, 4, 2, 6, 7, 9};
 
     c0->Divide(2,3);
     d0 = c0->cd(1);
