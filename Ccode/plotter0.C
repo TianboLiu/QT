@@ -207,6 +207,17 @@ int main(const int argc, const char * argv[]){
     fs6.close();
     latex.DrawLatex(0.05, 27.0, "z<0.6, P_{T}^{min}=0.2");
 
+
+    TLegend * l0 = new TLegend(0.75, 0.4, 0.9, 0.9);
+    double Q2leg[6] = {1.25, 1.51, 1.82, 2.88, 5.24, 9.21};
+    for (int i = 0; i < 6; i++){
+      g0 = new TGraph(0);
+      SetGraph(g0, 1, Clist[i], 2.0, 20, Clist[i], 0.5);
+      l0->AddEntry(g0, Form("%.2f", Q2leg[i]), "l");
+    }
+    l0->DrawClone("same");
+
+
     c0->Print("path/gallery/ptcut_model0.pdf");
 
 
