@@ -118,7 +118,7 @@ namespace SIDIS{
 
   double Model_FUUT_1(const double * var, const double * par, const char * target = "proton", const char * hadron = "pi+"){//gaussian z-dep
     //var: x, Q2, z, Pt
-    double Pt2 = var[2] * var[2] * par[0] * par[0] + par[1] * par[1] * pow(1.0 - var[2], par[2] * par[2]);
+    double Pt2 = var[2] * var[2] * par[0] * par[0] + par[1] * par[1] * pow(1.0 - var[2], par[2]);
     double factor = exp(- var[3] * var[3] / Pt2) / (M_PI * Pt2);                                                                                          
     double xf[13], zD[13];        
     DIS::xPDF(xf, var[0], var[1], target);
