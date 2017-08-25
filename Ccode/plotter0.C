@@ -32,6 +32,9 @@ int main(const int argc, const char * argv[]){
 
   if (opt == 0){//ptcut plot
 
+    gPad->SetLeftMargin(0.15);
+    gPad->SetBottomMargin(0.15);
+    
     TH1D * hB = new TH1D("hB", "", 1, 0.0, 1.4);
     hB->SetStats(0);
     hB->GetXaxis()->SetTitle("P_{T}^{max} (GeV)");
@@ -59,8 +62,8 @@ int main(const int argc, const char * argv[]){
 
     c0->Divide(2,3);
     c0->cd(1);
-    c0->SetLeftMargin(0.15);
-    c0->SetBottomMargin(0.15);
+    //c0->SetLeftMargin(0.15);
+    //c0->SetBottomMargin(0.15);
     hB->DrawClone("axis");
 
     ifstream fs1("path/gallery/ptcut_model0_z1.0_ptmin0.1.dat");
@@ -84,8 +87,8 @@ int main(const int argc, const char * argv[]){
     
 
     c0->cd(2);
-    c0->SetLeftMargin(0.15);
-    c0->SetBottomMargin(0.15);
+    //c0->SetLeftMargin(0.15);
+    //c0->SetBottomMargin(0.15);
     hB->DrawClone("axis");
 
     ifstream fs2("path/gallery/ptcut_model0_z1.0_ptmin0.2.dat");
