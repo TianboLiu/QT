@@ -4,7 +4,7 @@ using namespace FIT;
 
 int main(const int argc, const char * argv[]){
 
-  if (argc < 1) return 0;
+  if (argc < 3) return 0;
   //const int opt = atoi(argv[1]);
 
   SIDIS::FUUT = & SIDIS::Model_FUUT_1;
@@ -14,17 +14,19 @@ int main(const int argc, const char * argv[]){
   double Q2list[6] = {1.25, 1.51, 1.82, 2.88, 5.23, 9.21};
   SelectionTdelta[1] = 0.1;
 
+  double zmax = atof(argv[1]);
+
   double Ptmax = 0.2;
-  double Ptmin = 0.1;
+  double Ptmin = atof(argv[2]);
 
   //cut
   SelectionT[0] = 0.5;    SelectionTdelta[0] = 0.5;//x
-  SelectionT[2] = 0.5;    SelectionTdelta[2] = 0.5;//z
+  SelectionT[2] = zmax / 2.0;    SelectionTdelta[2] = zmax / 2.0;//z
  
-  FILE * fs = fopen(Form("path/gallery/ptcut_model1_z%.1f_ptmin%.1f.dat", SelectionT[2] + SelectionTdelta[2], Ptmin),"w");
+  FILE * fs = fopen(Form("path/gallery/ptcut_model1_z%.1f_ptmin%.1f.dat", zmax, Ptmin),"w");
   fprintf(fs, "hermes data proton and deuteron\n");
   fprintf(fs, "z < %.1f\n", SelectionT[2] + SelectionTdelta[2]);
-  fprintf(fs, "Q2\t Ptmin\t Ptmax\t Npoints\t Chi2/dof\t p0\t p1\t p2\n");
+  fprintf(fs, "Q2\t Ptmin\t Ptmax\t Npt\t X2/dof\t p0\t p1\t p2\t e0\t e1\t e2\n");
   
   int preNpt = 0;
   for (int i = 0; i < 6; i++){
@@ -37,7 +39,7 @@ int main(const int argc, const char * argv[]){
       SelectionT[3] = 0.5 * (Ptmax + Ptmin);
       SelectionTdelta[3] = 0.5 * (Ptmax - Ptmin);
 
-      double par[3] = {0.5, 0.5, 0.0};
+      double par[3] = {0.7, 0.4, 0.1};
    
       Npt = 0;
          
@@ -51,7 +53,7 @@ int main(const int argc, const char * argv[]){
       preNpt = Npt;
 
       Minimize(3, par);
-      fprintf(fs, "%.2f\t %.2f\t %.2f\t %d\t %.2f\t %.4f\t %.4f\t %.4f\n", SelectionT[1], Ptmin, Ptmax, Npt, Parameters[3] / (Npt - 2), Parameters[0], Parameters[1], Parameters[2]);
+      fprintf(fs, "%.2f\t %.2f\t %.2f\t %d\t %.2f\t %.2E\t %.2E\t %.2E\t %.1E\t %.1E\t %.1E\n", SelectionT[1], Ptmin, Ptmax, Npt, Parameters[3] / (Npt - 2), Parameters[0], Parameters[1], Parameters[2], ParametersError[0], ParametersError[1], ParametersError[2]);
     }
     fprintf(fs, "\n");
   }
