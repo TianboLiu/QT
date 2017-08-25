@@ -32,8 +32,7 @@ int main(const int argc, const char * argv[]){
 
   if (opt == 0){//ptcut plot
 
-    gPad->SetLeftMargin(0.15);
-    gPad->SetBottomMargin(0.15);
+    TPad * d0;
     
     TH1D * hB = new TH1D("hB", "", 1, 0.0, 1.4);
     hB->SetStats(0);
@@ -61,9 +60,9 @@ int main(const int argc, const char * argv[]){
     int Clist[6] = {1, 4, 2, 5, 6, 7};
 
     c0->Divide(2,3);
-    c0->cd(1);
-    //c0->SetLeftMargin(0.15);
-    //c0->SetBottomMargin(0.15);
+    d0 = c0->cd(1);
+    d0->SetLeftMargin(0.15);
+    d0->SetBottomMargin(0.15);
     hB->DrawClone("axis");
 
     ifstream fs1("path/gallery/ptcut_model0_z1.0_ptmin0.1.dat");
