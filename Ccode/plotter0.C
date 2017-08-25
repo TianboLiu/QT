@@ -32,7 +32,7 @@ int main(const int argc, const char * argv[]){
 
   if (opt == 0){//ptcut plot
 
-    TPad * d0;
+    TVirtualPad * d0;
     
     TH1D * hB = new TH1D("hB", "", 1, 0.0, 1.4);
     hB->SetStats(0);
