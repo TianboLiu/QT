@@ -169,6 +169,7 @@ namespace FIT{
   TString Target[3000], Hadron[3000];
 
   double Parameters[20];
+  double ParametersError[20];
 
   double SelectionT[4];
   double SelectionTdelta[4];
@@ -228,8 +229,11 @@ namespace FIT{
     }
     min->Minimize();
     const double * xs = min->X();
-    for (int i = 0; i < NPAR; i++)
+    const double * es = min->Errors();
+    for (int i = 0; i < NPAR; i++){
       Parameters[i] = xs[i];
+      ParametersError[i] = es[i];
+    }
     const double chi2 = min->MinValue();
     Parameters[NPAR] = chi2;
     return chi2;
