@@ -79,31 +79,33 @@ int main(const int argc, const char * argv[]){
       g0->DrawClone("lpsame");
       g0->Delete();
     }
+    fs1.close();
+    latex.DrawLatex(0.05, 0.95, "z<1.0, P_{T}^{min}=0.1");
     
 
-    c0->Divide(2,3);
-    c0->cd(1);
+    c0->cd(2);
     c0->SetLeftMargin(0.15);
     c0->SetBottomMargin(0.15);
     hB->DrawClone("axis");
 
-    ifstream fs1("path/gallery/ptcut_model0_z1.0_ptmin0.1.dat");
+    ifstream fs2("path/gallery/ptcut_model0_z1.0_ptmin0.2.dat");
     for (int i = 0; i < 3; i++)
-      fs1.getline(ltmp, 300);
-    int Q2line1[6] = {18, 15, 13, 11, 11, 12};
+      fs2.getline(ltmp, 300);
+    int Q2line2[6] = {16, 14, 11, 9, 10, 10};
        
     for (int i = 0; i < 6; i++){
-      g0 = new TGraph(Q2line1[i]);
-      for (int j = 0; j < Q2line1[i]; j++){
-	fs1 >> tmp >> tmp >> ptmax >> tmp >> chi2 >> tmp >> tmp >> tmp >> tmp;
+      g0 = new TGraph(Q2line2[i]);
+      for (int j = 0; j < Q2line2[i]; j++){
+	fs2 >> tmp >> tmp >> ptmax >> tmp >> chi2 >> tmp >> tmp >> tmp >> tmp;
 	g0->SetPoint(j, ptmax, chi2);
       }
-      fs1.getline(ltmp, 300);
+      fs2.getline(ltmp, 300);
       SetGraph(g0, 1, Clist[i], 2.0, 20, Clist[i], 0.5);
       g0->DrawClone("lpsame");
       g0->Delete();
     }
-
+    fs2.close();
+    latex.DrawLatex(0.05, 0.95, "z<1.0, P_{T}^{min}=0.2");
     
 
 
