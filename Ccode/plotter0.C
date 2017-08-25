@@ -82,7 +82,7 @@ int main(const int argc, const char * argv[]){
       g0->Delete();
     }
     fs1.close();
-    latex.DrawLatex(0.05, 27.0, "z<1.0, P_{T}^{min}=0.1");
+    latex.DrawLatex(0.05, 18.0, "z<1.0, P_{T}^{min}=0.1");
     
 
     d0 = c0->cd(2);
@@ -107,7 +107,7 @@ int main(const int argc, const char * argv[]){
       g0->Delete();
     }
     fs2.close();
-    latex.DrawLatex(0.05, 27.0, "z<1.0, P_{T}^{min}=0.2");
+    latex.DrawLatex(0.05, 18.0, "z<1.0, P_{T}^{min}=0.2");
 
 
     d0 = c0->cd(3);
@@ -132,7 +132,7 @@ int main(const int argc, const char * argv[]){
       g0->Delete();
     }
     fs3.close();
-    latex.DrawLatex(0.05, 27.0, "z<0.7, P_{T}^{min}=0.1");
+    latex.DrawLatex(0.05, 18.0, "z<0.7, P_{T}^{min}=0.1");
 
     d0 = c0->cd(4);
     d0->SetLeftMargin(0.15);
@@ -156,7 +156,7 @@ int main(const int argc, const char * argv[]){
       g0->Delete();
     }
     fs4.close();
-    latex.DrawLatex(0.05, 27.0, "z<0.7, P_{T}^{min}=0.2");
+    latex.DrawLatex(0.05, 18.0, "z<0.7, P_{T}^{min}=0.2");
 
     d0 = c0->cd(5);
     d0->SetLeftMargin(0.15);
@@ -180,7 +180,7 @@ int main(const int argc, const char * argv[]){
       g0->Delete();
     }
     fs5.close();
-    latex.DrawLatex(0.05, 27.0, "z<0.6, P_{T}^{min}=0.1");
+    latex.DrawLatex(0.05, 18.0, "z<0.6, P_{T}^{min}=0.1");
     
 
     d0 = c0->cd(6);
@@ -205,7 +205,7 @@ int main(const int argc, const char * argv[]){
       g0->Delete();
     }
     fs6.close();
-    latex.DrawLatex(0.05, 27.0, "z<0.6, P_{T}^{min}=0.2");
+    latex.DrawLatex(0.05, 18.0, "z<0.6, P_{T}^{min}=0.2");
 
 
     TLegend * l0 = new TLegend(0.75, 0.4, 0.9, 0.9);
