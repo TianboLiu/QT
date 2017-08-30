@@ -8,6 +8,7 @@
 #include "LHAPDF/LHAPDF.h"
 
 #include "TMath.h"
+#include "Math/GSLIntegrator.h"
 
 using namespace std;
 
