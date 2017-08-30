@@ -25,6 +25,10 @@ namespace TMDEVOL{
   const double C_F = 4.0 / 3.0;
   const double C_A = 3.0;
   const double T_R = 0.5;
+
+  int order_C;
+  int order_gamma_K;
+  int order_gamma_F;
   
   double C1 = 2.0 * exp(-gammaE);
 
@@ -45,7 +49,17 @@ namespace TMDEVOL{
   }
 
   double gamma_K(const double mu){
-    double value = 2.0 * (xpdf->alphasQ(mu)) * C_F / Pi;
+    double value = 0.0;
+    if (order_gamma_K > 0){
+      value += 2.0 * (xpdf->alphasQ(mu) / Pi) * C_F;
+    }
+    if (order_gamma_K > 1){
+      double Nf = 3.0;
+      if (mu > 1.3) Nf = 4.0;
+      if (mu > 4.5) Nf = 5.0;
+      if (mu > 180.0) Nf = 6.0;
+      value += 2.0 * pow(xpdf->alphasQ(mu) / Pi, 2) * C_F / 2.0 * (C_A * (67.0 / 18.0 - Pi * Pi / 6.0) - 10.0 / 9.0 * T_R * Nf);
+    }
     return value;
   }
 
@@ -74,10 +88,15 @@ namespace TMDEVOL{
     double logB1 = log(sqrt(zeta_F) / mu_b(b_T)) * kernel_K(bstar(b_T), mu_b(b_T));
     double logB2 = logB_2(b_T, mu, zeta_F);
     return exp(logB1 + logB2);
-  } 
+  }
+
+  
 
   int Initialize(){
     bstar = & bstar_CS;
+    order_C = 0;
+    order_gamma_K = 1;
+    order_gamma_F = 1;
     return 0;
   }
 }
