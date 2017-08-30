@@ -44,9 +44,13 @@ namespace TMDEVOL{
   }
   
 
+
+  int Initialize(){
+    bstar = & bstar_CS;
+  }
 }
 
-//TMDEVOL::bstar = & TMDEVOL::bstar_CS;
+
 
 
 
