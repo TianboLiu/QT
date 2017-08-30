@@ -26,5 +26,9 @@ int main(const int argc, const char * argv[]){
  
   cout << SIDIS::Multiplicity(var, par, "proton", "pi+") << endl;
 
+  TMDEVOL::Initialize();
+
+  cout << TMDEVOL::bstar(0.5) << endl;
+
   return 0;
 }
