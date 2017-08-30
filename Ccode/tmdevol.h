@@ -33,7 +33,6 @@ namespace TMDEVOL{
   }
 
   double (* bstar)(const double b_T);
-  bstar = &bstar_CS;
 
   double mu_b(const double b_T){
     return C1 / bstar(b_T);
@@ -46,5 +45,9 @@ namespace TMDEVOL{
   
 
 }
+
+TMDEVOL::bstar = &TMDEVOL::bstar_CS;
+
+
 
 #endif
