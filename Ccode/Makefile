@@ -7,7 +7,7 @@ ROOTLIBS      = $(shell root-config --libs) -lMathMore -lHistPainter
 ROOTGLIBS     = $(shell root-config --glibs)
 LHAPDFLIBS    = $(shell lhapdf-config --cflags --ldflags)
 CXX           = g++
-CXXFLAGS      = -lgfortran -lgsl -lgslcblas -lm -Wall -frtti -fexceptions -fPIC \
+CXXFLAGS      = -lgfortran -Wall -frtti -fexceptions -fPIC \
                    -DLINUXVERS -I$(ROOTSYS)/include -O -I/var/phy/project/mepg/tl190/LHAPDF/include -I/var/phy/project/mepg/tl190/LHAPDF/boost_1_59_0 -L/var/phy/project/mepg/tl190/LHAPDF/lib -lLHAPDF
 
 FFLAGS	      = -lgfortran -O -W -ffixed-line-length-132 -ff2c -fno-automatic -fdefault-real-8
