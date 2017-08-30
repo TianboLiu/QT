@@ -13,6 +13,9 @@
 #include "Math/GSLIntegrator.h"
 #include "Math/Integrator.h"
 #include "Math/AllIntegrationTypes.h"
+#include "Math/IntegratorMultiDim.h"
+#include "Math/WrappedParamFunction.h"
+
 
 using namespace std;
 
