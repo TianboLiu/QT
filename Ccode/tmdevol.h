@@ -54,8 +54,8 @@ namespace TMDEVOL{
     return value;
   }
 
-  double logB_integrand_2(const double logmu, const double * par){
-    double zeta_F = par[0];
+  double logB_integrand_2(const double logmu, void * par){
+    double zeta_F = ((double *) par)[0];
     double mu = exp(logmu);
     return gamma_F(mu, mu * mu) - log(sqrt(zeta_F) / mu) * gamma_K(mu);
   }
