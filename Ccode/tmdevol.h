@@ -9,6 +9,8 @@
 
 #include "TMath.h"
 #include "Math/GSLIntegrator.h"
+#include "Math/Integrator.h"
+#include "Math/AllIntegrationTypes.h"
 
 using namespace std;
 
