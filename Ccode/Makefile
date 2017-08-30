@@ -9,7 +9,8 @@ ROOTGLIBS     = $(shell root-config --glibs)
 LHAPDFLIBS    = $(shell lhapdf-config --cflags --ldflags)
 GSLLIBS       = -lgsl -lgslcblas -lm
 CXX           = g++
-CXXFLAGS      = -lgfortran -Wall -frtti -fexceptions -fPIC \
+CXXFLAGS      = -lgfortran -lgsl -lgslcblas -lm \
+		-Wall -frtti -fexceptions -fPIC \
                    -DLINUXVERS -I$(ROOTSYS)/include -I/var/phy/project/mepg/tl190/LHAPDF/include -I/var/phy/project/mepg/tl190/LHAPDF/boost_1_59_0 -L/var/phy/project/mepg/tl190/LHAPDF/lib -lLHAPDF -O
 
 FFLAGS	      = -lgfortran -O -W -ffixed-line-length-132 -ff2c -fno-automatic -fdefault-real-8
@@ -47,7 +48,7 @@ PROGS = $(O)
 
 $(O): $(O).o $(O).C $(total_OBJS)
 	rm -f $@
-	$(CXX) $(CXXFLAGS) $(GSLLIBS) -o $@ $(O).o $(total_OBJS) $(ALL_LIBS)
+	$(CXX) $(CXXFLAGS) -o $@ $(O).o $(total_OBJS) $(ALL_LIBS)
 
 
 clean:
