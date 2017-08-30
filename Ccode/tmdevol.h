@@ -62,7 +62,8 @@ namespace TMDEVOL{
 
   double logB_2(const double b_T, const double mu, const double zeta_F){
     ROOT::Math::GSLIntegrator ig(ROOT::Math::IntegrationOneDim::kADAPTIVE, 0.0, 1.0e-6);
-    ig.SetFunction(&logB_integrand_2, &zeta_F);
+    double par[1] = {zeta_F};
+    ig.SetFunction(&logB_integrand_2, par);
     double min_logmu = log(mu_b(b_T));
     double max_logmu = log(mu);
     double result = ig.Integral(min_logmu, max_logmu);
