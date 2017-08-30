@@ -46,7 +46,7 @@ namespace TMDEVOL{
 
 }
 
-TMDEVOL::bstar = & TMDEVOL::bstar_CS;
+//TMDEVOL::bstar = & TMDEVOL::bstar_CS;
 
 
 
