@@ -8,14 +8,7 @@
 #include "LHAPDF/LHAPDF.h"
 
 #include "TMath.h"
-#include "Math/Functor.h"
-#include "Math/WrappedTF1.h"
 #include "Math/GSLIntegrator.h"
-#include "Math/Integrator.h"
-#include "Math/AllIntegrationTypes.h"
-#include "Math/IntegratorMultiDim.h"
-#include "Math/WrappedParamFunction.h"
-
 
 using namespace std;
 
