@@ -7,10 +7,9 @@ O = example
 ROOTLIBS      = $(shell root-config --libs) -MathMore -lHistPainter
 ROOTGLIBS     = $(shell root-config --glibs)
 LHAPDFLIBS    = $(shell lhapdf-config --cflags --ldflags)
-GSLLIBS       = -lgsl -lgslcblas -lm
+GSLLIBS       = 
 CXX           = g++
-CXXFLAGS      = -lgfortran -lgsl -lgslcblas -lm \
-		-Wall -frtti -fexceptions -fPIC \
+CXXFLAGS      = -lgfortran -lgsl -lgslcblas -lm -Wall -frtti -fexceptions -fPIC \
                    -DLINUXVERS -I$(ROOTSYS)/include -I/var/phy/project/mepg/tl190/LHAPDF/include -I/var/phy/project/mepg/tl190/LHAPDF/boost_1_59_0 -L/var/phy/project/mepg/tl190/LHAPDF/lib -lLHAPDF -O
 
 FFLAGS	      = -lgfortran -O -W -ffixed-line-length-132 -ff2c -fno-automatic -fdefault-real-8
