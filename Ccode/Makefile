@@ -15,14 +15,14 @@ FFLAGS	      = -lgfortran -O -W -ffixed-line-length-132 -ff2c -fno-automatic -fd
 
 # Linux with g++
 INCLUDES      = -I$(ROOTSYS)/include 
-CXX           = g++
+CXX           = g++ -fopenmp
 LD            = g++
-LDFLAGS       = -O3
+LDFLAGS       = -O2
 
 LIBS          = $(ROOTLIBS)
 GLIBS         = $(ROOTGLIBS)
 
-ALL_LIBS =  $(GLIBS) $(LIBS) $(LHAPDFLIBS) $(GSLLIBS)
+ALL_LIBS =  $(GLIBS) $(LIBS) $(LHAPDFLIBS)
 
 # The following sources comprise the package of scaler classes by R. Michaels.
 SRC = $(O).C
