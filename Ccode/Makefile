@@ -47,7 +47,7 @@ PROGS = $(O)
 
 $(O): $(O).o $(O).C $(total_OBJS)
 	rm -f $@
-	$(CXX) $(CXXFLAGS) -o $@ $(O).o $(total_OBJS) $(ALL_LIBS)
+	$(CXX) $(CXXFLAGS) $(GSLLIBS) -o $@ $(O).o $(total_OBJS) $(ALL_LIBS)
 
 
 clean:
