@@ -40,7 +40,9 @@ namespace TMDEVOL{
   }
 
   double kernel_K(const double b_T, const double mu){
-    double value = - (xpdf->alphasQ(mu)
+    double value = - (xpdf->alphasQ(mu)) * C_F / Pi * 2.0 * (log(b_T * mu) - log(2.0) + gammaE);
+    return value;
+  }
   
 
 }
