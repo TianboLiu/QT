@@ -70,6 +70,11 @@ namespace TMDEVOL{
     return result;
   }
 
+  double B_factor(const double b_T, const double mu, const double zeta_F){
+    double logB1 = log(sqrt(zeta_F) / mu_b(b_T)) * kernel_K(bstar(b_T), mu_b(b_T));
+    double logB2 = logB_2(b_T, mu, zeta_F);
+    return exp(logB1 + logB2);
+  } 
 
   int Initialize(){
     bstar = & bstar_CS;
