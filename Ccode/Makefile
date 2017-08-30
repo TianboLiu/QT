@@ -2,7 +2,6 @@
 # R. Michaels, rom@jlab.org, Aug 2001  See also README !!
 # Version of this release
 #
-O = example
  
 ROOTLIBS      = $(shell root-config --libs) -MathMore -lHistPainter
 ROOTGLIBS     = $(shell root-config --glibs)
