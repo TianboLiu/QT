@@ -30,7 +30,7 @@ int main(const int argc, const char * argv[]){
 
   cout << TMDEVOL::bstar(0.5) << endl;
 
-  cout << TMDEVOL::B_factor(0.0, 3.0, 3.0*3.0) << endl;
+  cout << TMDEVOL::B_factor(0.01, 3.0, 3.0*3.0) << endl;
 
   return 0;
 }
