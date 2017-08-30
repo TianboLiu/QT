@@ -42,11 +42,36 @@ namespace TMDEVOL{
     double value = - (xpdf->alphasQ(mu)) * C_F / Pi * 2.0 * (log(b_T * mu) - log(2.0) + gammaE);
     return value;
   }
-  
+
+  double gamma_K(const double mu){
+    double value = 2.0 * (xpdf->alphasQ(mu)) * C_F / Pi;
+    return value;
+  }
+
+  double gamma_F(const double mu, const double zeta_F){
+    double value = (xpdf->alphasQ(mu)) * C_F / Pi * (3.0 / 2.0 - log(zeta_F / (mu * mu)));
+    return value;
+  }
+
+  double logB_integrand_2(const double logmu, const double * par){
+    double zeta_F = par[0];
+    double mu = exp(logmu);
+    return gamma_F(mu, mu * mu) - log(sqrt(zeta_F) / mu) * gamma_K(mu);
+  }
+
+  double logB_2(const double b_T, const double mu, const double zeta_F){
+    ROOT::Math::GSLIntegrator ig(ROOT::Math::IntegrationOneDim::kADAPTIVE, 0.0, 1.0e-6);
+    ig.SetFunction(&logB_integrand_2, &zeta_F);
+    double min_logmu = log(mu_b(b_T));
+    double max_logmu = log(mu);
+    double result = ig.Integral(min_logmu, max_logmu);
+    return result;
+  }
 
 
   int Initialize(){
     bstar = & bstar_CS;
+    return 0;
   }
 }
 
