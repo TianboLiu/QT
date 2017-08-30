@@ -3,7 +3,7 @@
 # Version of this release
 #
  
-ROOTLIBS      = $(shell root-config --libs) -MathMore -lHistPainter
+ROOTLIBS      = $(shell root-config --libs) -MathMore #-lHistPainter
 ROOTGLIBS     = $(shell root-config --glibs)
 LHAPDFLIBS    = $(shell lhapdf-config --cflags --ldflags)
 GSLLIBS       = 
