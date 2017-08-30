@@ -3,7 +3,7 @@
 # Version of this release
 #
  
-ROOTLIBS      = $(shell root-config --libs) -MathMore 
+ROOTLIBS      = $(shell root-config --libs) -lMathMore -lHistPainter
 ROOTGLIBS     = $(shell root-config --glibs)
 LHAPDFLIBS    = $(shell lhapdf-config --cflags --ldflags)
 CXX           = g++
@@ -16,7 +16,7 @@ FFLAGS	      = -lgfortran -O -W -ffixed-line-length-132 -ff2c -fno-automatic -fd
 INCLUDES      = -I$(ROOTSYS)/include 
 CXX           = g++ -fopenmp
 LD            = g++
-LDFLAGS       = -O2
+LDFLAGS       = -O3
 
 LIBS          = $(ROOTLIBS)
 GLIBS         = $(ROOTGLIBS)
