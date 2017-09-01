@@ -26,6 +26,10 @@ namespace TMDEVOL{
   const double C_A = 3.0;
   const double T_R = 0.5;
 
+  double M_charm = 1.3;
+  double M_bottom = 4.5;
+  double M_top = 180.0;
+
   int order_C;
   int order_gamma_K;
   int order_gamma_F;
@@ -55,16 +59,26 @@ namespace TMDEVOL{
     }
     if (order_gamma_K > 1){
       double Nf = 3.0;
-      if (mu > 1.3) Nf = 4.0;
-      if (mu > 4.5) Nf = 5.0;
-      if (mu > 180.0) Nf = 6.0;
+      if (mu > M_charm) Nf = 4.0;
+      if (mu > M_bottom) Nf = 5.0;
+      if (mu > M_top) Nf = 6.0;
       value += 2.0 * pow(xpdf->alphasQ(mu) / Pi, 2) * C_F / 2.0 * (C_A * (67.0 / 18.0 - Pi * Pi / 6.0) - 10.0 / 9.0 * T_R * Nf);
     }
     return value;
   }
 
   double gamma_F(const double mu, const double zeta_F){
-    double value = (xpdf->alphasQ(mu)) * C_F / Pi * (3.0 / 2.0 - log(zeta_F / (mu * mu)));
+    double value = 0.0;
+    if (order_gamma_F > 0){
+      value += (xpdf->alphasQ(mu) / Pi) * C_F * (3.0 / 2.0 - log(zeta_F / (mu * mu)));
+    }
+    if (order_gamma_F > 1){
+      double Nf = 3.0;
+      if (mu > M_charm) Nf = 4.0;
+      if (mu > M_bottom) Nf = 5.0;
+      if (mu > M_top) Nf = 6.0;
+      value += pow(C_F / 2.0, 2) * (12.0 * ROOT::Math::riemann_zeta(3.0) + 3.0 / 4.0 - Pi * Pi) - C_F * C_A / 2.0 * (Pi * Pi * 11.0 / 18.0 - 193.0 / 24.0 + 3.0 * ROOT::Math::riemann_zeta(3.0)) - C_F * T_R * Nf / 2.0 * (17.0 / 6.0 - Pi * Pi * 2.0 / 9.0);
+    }
     return value;
   }
 
@@ -90,13 +104,31 @@ namespace TMDEVOL{
     return exp(logB1 + logB2);
   }
 
-  
+  double A_factor(const int flavor, const double x, const double b_T){
+    double value = xpdf->xfxQ(flavor, x, mu_b(b_T));
+    if (order_C > 0){
+      value += 0.0;
+    }
+    return value;
+  }
+
+  double (* C_factor)(const int flavor, const double x, const double b_T, const double zeta_F, const double zeta_F_0);
+
+  double C_factor_AR(const int flavor, const double x, const double b_T, const double zeta_F, const double zeta_F_0){
+    double x0 = 0.02;
+    double g1 = 0.21;
+    double g2 = 0.68;
+    double g3 = -0.6;
+    double logC = (g2 / 2.0 * log(sqrt(zeta_F / zeta_F_0)) + g1 * (0.5 + g3 * log(10.0 * x * x0 / (x0 + x)))) * pow(b_T, 2);
+    return exp(-logC);
+  } 
 
   int Initialize(){
-    bstar = & bstar_CS;
     order_C = 0;
-    order_gamma_K = 1;
+    order_gamma_K = 2;
     order_gamma_F = 1;
+    bstar = & bstar_CS;
+    C_factor = & C_factor_AR;
     return 0;
   }
 }
