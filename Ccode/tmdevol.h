@@ -106,7 +106,7 @@ namespace TMDEVOL{
   }
 
   double A_factor(const int flavor, const double x, const double b_T){
-    double value = xpdf->xfxQ(flavor, x, mu_b(b_T));
+    double value = xpdf->xfxQ(flavor, x, mu_b(b_T)) / x;
     if (order_C > 0){
       value += 0.0;
     }
@@ -122,7 +122,34 @@ namespace TMDEVOL{
     double g3 = -0.6;
     double logC = (g2 / 2.0 * log(sqrt(zeta_F / zeta_F_0)) + g1 * (0.5 + g3 * log(10.0 * x * x0 / (x0 + x)))) * pow(b_T, 2);
     return exp(-logC);
-  } 
+  }
+
+  double F_bspace(const int flavor, const double x, const double b_T, const double mu, const double zeta_F, const double zeta_F_0){
+    return A_factor(flavor, x, b_T) * B_factor(b_T, mu, zeta_F) * C_factor(flavor, x, b_T, zeta_F, zeta_F_0);
+  }
+
+  double F_kspace_integrand(const double Atan_b_T, void * par){
+    double * var = (double *) par;
+    int flavor = (int) (var[0] + 1.0e-9);
+    double x = var[1];
+    double mu = var[2];
+    double zeta_F = var[3];
+    double zeta_F_0 = var[4];
+    double k_T = var[5];
+    double b_T = tan(Atan_b_T);
+    double Fb = F_bspace(flavor, x, b_T, mu, zeta_F, zeta_F_0);
+    return 1.0 / (2.0 * Pi) * ROOT::Math::cyl_bessel_j(0, b_T * k_T) * b_T * Fb / pow(cos(Atan_b_T), 2);
+  }
+
+  double F_kspace(const int flavor, const double x, const double k_T, const double mu, const double zeta_F, const double zeta_F_0){
+    double par[6] = {(double) flavor, x, mu, zeta_F, zeta_F_0, k_T};
+    ROOT::Math::GSLIntegrator ig(ROOT::Math::IntegrationOneDim::kADAPTIVE, 0.0, 1.0e-6);
+    ig.SetFunction(&F_kspace_integrand, par);
+    double result = ig.Integral(0.0, Pi / 2.0 - 1.0e-9);
+    return result;
+  }
+
+		    
 
   int Initialize(){
     order_C = 0;
