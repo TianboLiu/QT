@@ -9,6 +9,7 @@
 
 #include "TMath.h"
 #include "Math/GSLIntegrator.h"
+#include "Math/SpecFuncMathMore.h"
 
 using namespace std;
 
