@@ -81,7 +81,7 @@ int main(const int argc, const char * argv[]){
       Minimize(2, par);
 
       fprintf(fs, "%.2f\t %.2f\t %.2f\t %d\t %.2E\t %.2E\t %.2E\t %.1E\t %.1E\n",
-	      SelectionT[i], Ptmin, Ptmax, Npt, Parameters[2] / (Npt - 2), Parameters[0], Parameters[1], ParametersError[0], ParametersError[1]);
+	      SelectionT[1], Ptmin, Ptmax, Npt, Parameters[2] / (Npt - 2), Parameters[0], Parameters[1], ParametersError[0], ParametersError[1]);
     }
     fclose(fs);
   }
