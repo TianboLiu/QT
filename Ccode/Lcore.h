@@ -222,7 +222,7 @@ namespace FIT{
     min->SetMaxFunctionCalls(100000);
     //min->SetPrecision(1.0e-14);
     min->SetTolerance(1.0e-3);
-    min->SetPrintLevel(1);
+    min->SetPrintLevel(0);
     ROOT::Math::Functor f(&Chi2, NPAR);
     min->SetFunction(f);
     for (int i = 0; i < NPAR; i++){
