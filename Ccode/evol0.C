@@ -26,7 +26,7 @@ int main(const int argc, const char * argv[]){
   SelectionT[2] = zmax / 2.0;    SelectionTdelta[2] = zmax / 2.0;//z
  
   if (opt == 0){//find Pt cut for each Q2 bin
-    const double chi2max - 2.0;
+    const double chi2max = 2.0;
     
     int preNpt = 0;
     for (int i = 0; i < 6; i++){
