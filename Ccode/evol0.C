@@ -93,7 +93,9 @@ int main(const int argc, const char * argv[]){
     TMDEVOL::C_factor = & TMDEVOL::C_factor_Model0;
     TMDEVOL::kt_model0 = 0.720;
     cout << TMDEVOL::F_kspace(2, 0.0957, 0.1, sqrt(1.82), 1.82, 1.82) << endl;
-    cout << TMDEVOL::xpdf->xfxQ2(2, 0.0957, 1.82) << endl; 
+    cout << TMDEVOL::F_kspace(2, 0.0957, 0.2, sqrt(1.82), 1.82, 1.82) << endl;
+    cout << TMDEVOL::xpdf->xfxQ2(2, 0.0957, 1.82) / 0.0957 * exp(-pow(0.1/0.72, 2)) / (M_PI * pow(0.72, 2)) << endl;
+    cout << TMDEVOL::xpdf->xfxQ2(2, 0.0957, 1.82) / 0.0957 * exp(-pow(0.2/0.72, 2)) / (M_PI * pow(0.72, 2)) << endl;
 
 
   }
