@@ -4,6 +4,7 @@
 #include "TStyle.h"
 #include "TRandom3.h"
 #include "TGraph.h"
+#include "TGraphErrors.h"
 #include "TCanvas.h"
 #include "TH1D.h"
 #include "TLatex.h"
@@ -117,19 +118,21 @@ int main(const int argc, const char * argv[]){
     TGraph * gp[4];
     for (int i = 0; i < 4; i++){
       gl[i] = new TGraph(20);
-      gp[i] = new TGraph(1);
+      gp[i] = new TGraphErrors(1);
       SetGraph(gl[i], 1, color[i], 1., 20, color[i], 1.2);
       SetGraph(gp[i], 1, color[i], 1., 20, color[i], 1.2);
     }
 
     int flavor = 2;
     double ktfit[4] = {0.72, 0.788, 0.773, 0.658};
+    double dktfit[4] = {1.5e-2, 1.4e-2, 1.9e-2, 2.8e-2}; 
     double Q0input[4] = {sqrt(1.82), sqrt(2.88), sqrt(5.24), sqrt(9.21)};
     double Q = 1.5;
     for (int i = 0; i < 4; i++){
       TMDEVOL::kt_model0 = ktfit[i];
       TMDEVOL::Q0_model0 = Q0input[i];
-      gp[i]->SetPoint(0, Q0input[i], TMDEVOL::F_output(flavor, x, bt, Q0input[i]));     
+      gp[i]->SetPoint(0, Q0input[i], TMDEVOL::F_output(flavor, x, bt, Q0input[i]));
+      gp[i]->SetPointError(0, 0.0, TMDEVOL::F_output(flavor, x, bt, Q0input[i]) * (0.5 * bt * bt * ktfit[i] * dktfit[i]));
       for (int j = 0; j < 20; j++){
 	Q = 1.2 + 0.1 * j;
 	gl[i]->SetPoint(j, Q, TMDEVOL::F_output(flavor, x, bt, Q));
