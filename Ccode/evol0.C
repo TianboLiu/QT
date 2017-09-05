@@ -6,6 +6,7 @@
 #include "TGraph.h"
 #include "TCanvas.h"
 #include "TH1D.h"
+#include "TLatex.h"
 
 
 using namespace FIT;
@@ -109,7 +110,7 @@ int main(const int argc, const char * argv[]){
     TMDEVOL::F_input = & TMDEVOL::F_input_model0;
 
     double x = 0.1;
-    double kt = 0.1;
+    double bt = 0.1;
     int color[4] = {1, 4, 2, 6};
 
     TGraph * gl[4];
@@ -121,19 +122,55 @@ int main(const int argc, const char * argv[]){
       SetGraph(gp[i], 1, color[i], 1., 20, color[i], 0.5);
     }
 
+    int flavor = 2;
     double ktfit[4] = {0.72, 0.788, 0.773, 0.658};
-    double Q2input[4] = {1.82, 2.88, 5.24, 9.21};
+    double Q0input[4] = {sqrt(1.82), sqrt(2.88), sqrt(5.24), sqrt(9.21)};
+    double Q = 1.5;
     for (int i = 0; i < 4; i++){
       TMDEVOL::kt_model0 = ktfit[i];
+      TMDEVOL::Q0_model0 = Q0input[i];
+      gp[i]->SetPoint(0, Q0_model0, TMDEVOL::F_output(flavor, x, bt, Q0_model0));     
+      for (int j = 0; j < 20; j++){
+	Q = 1.5 + 0.1 * j;
+	gl[i]->SetPoint(j, Q, TMDEVOL::F_output(flavor, x, bt, Q));
+      }		
     }
 
-    TMDEVOL::kt_model0 = 0.720;
-    TMDEVOL::Q0_model0 = sqrt(1.82);
-    cout << TMDEVOL::F_output(2, 0.0957, 0.1, sqrt(1.82)) << endl;
-    cout << TMDEVOL::F_output(2, 0.0957, 0.2, sqrt(1.82)) << endl;
-    cout << TMDEVOL::xpdf->xfxQ2(2, 0.0957, 1.82) / 0.0957 * exp(-0.25 * pow(0.1 * 0.72, 2)) << endl;
-    cout << TMDEVOL::xpdf->xfxQ2(2, 0.0957, 1.82) / 0.0957 * exp(-0.25 * pow(0.2 * 0.72, 2)) << endl;
+    TH1D * hB = new TH1D("hB", "", 1, 1.0, 4.0);
+    hB->SetStats(0);
+    hB->SetMinimum(0.0);
+    hB->SetMaximum(10.0);
+    hB->GetXaxis()->SetTitle("Q (GeV)");
+    hB->GetXaxis()->CenterTitle(true);
+    hB->GetXaxis()->SetTitleSize(0.055);
+    hB->GetXaxis()->SetTitleOffset(1.15);
+    hB->GetXaxis()->SetLabelSize(0.055);
+    hB->GetXaxis()->SetNdivisions(6, 5, 0);
+    hB->GetYaxis()->SetTitle("f^{u}(x,b_{T})");
+    hB->GetYaxis()->CenterTitle(true);
+    hB->GetYaxis()->SetTitleSize(0.055);
+    hB->GetYaxis()->SetTitleOffset(1.15);
+    hB->GetYaxis()->SetLabelSize(0.055);
+    hB->GetYaxis()->SetNdivisions(6, 5, 0);
+      
 
+    TCanvas * c0 = new TCanvas("c0", "", 800, 600);
+    c0->SetLeftMargin(0.15);
+    c0->SetRightMargin(0.15);
+
+    hB->DrawClone("axis");
+    for (int i = 0; i < 4; i++){
+      gp[i]->DrawClone("psame");
+      gl[i]->DrawClone("lsame");
+    }
+
+    TLatex latex;
+    latex.SetTextAlign(12);
+    latex.SetTextFont(22);
+    latex.SetTextSize(0.5);
+    latex.DrawLatex(1.2, 9.0, "x = 0.1, b_{T} = 0.1 GeV^{-1}");
+
+    c0->Print("path/gallery/evol0_x0.1_bt0.1_u.pdf");
 
   }
   
