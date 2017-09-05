@@ -129,7 +129,7 @@ int main(const int argc, const char * argv[]){
     for (int i = 0; i < 4; i++){
       TMDEVOL::kt_model0 = ktfit[i];
       TMDEVOL::Q0_model0 = Q0input[i];
-      gp[i]->SetPoint(0, Q0_model0, TMDEVOL::F_output(flavor, x, bt, Q0_model0));     
+      gp[i]->SetPoint(0, Q0input[i], TMDEVOL::F_output(flavor, x, bt, Q0input[i]));     
       for (int j = 0; j < 20; j++){
 	Q = 1.5 + 0.1 * j;
 	gl[i]->SetPoint(j, Q, TMDEVOL::F_output(flavor, x, bt, Q));
