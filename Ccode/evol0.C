@@ -118,8 +118,8 @@ int main(const int argc, const char * argv[]){
     for (int i = 0; i < 4; i++){
       gl[i] = new TGraph(20);
       gp[i] = new TGraph(1);
-      SetGraph(gl[i], 1, color[i], 1., 20, color[i], 0.5);
-      SetGraph(gp[i], 1, color[i], 1., 20, color[i], 0.5);
+      SetGraph(gl[i], 1, color[i], 1., 20, color[i], 1.2);
+      SetGraph(gp[i], 1, color[i], 1., 20, color[i], 1.2);
     }
 
     int flavor = 2;
