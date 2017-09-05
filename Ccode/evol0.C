@@ -90,7 +90,7 @@ int main(const int argc, const char * argv[]){
   if (opt == 2){//evolution
     TMDEVOL::C_factor = & TMDEVOL::C_factor_Model0;
     TMDEVOL::kt_model0 = 0.720;
-    cout << TMDEVOL::F_kspace(2, 0.0957, 0.1, sqrt(1.82), 1.82, 1.82) << endl;
+    cout << TMDEVOL::F_bspace(2, 0.0957, 0.1, sqrt(1.82), 1.82, 1.82) << endl;
 
 
 
