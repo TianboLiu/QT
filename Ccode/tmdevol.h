@@ -124,12 +124,14 @@ namespace TMDEVOL{
     return exp(-logC);
   }
 
+  double kt_model0;
   double C_factor_Model0(const int flavor, const double x, const double b_T, const double zeta_F, const double zeta_F_0){
     double Ar = (xpdf->xfxQ(flavor, x, sqrt(zeta_F_0))) / (xpdf->xfxQ(flavor, x, mu_b(b_T)));
+    double Br = B_factor(b_T, sqrt(zeta_F_0), sqrt(zeta_F_0));
     double g2 = 0.68;
-    double kt2 = 0.5;
+    double kt2 = pow(kt_model0, 2);
     double C = exp(-(g2 / 2.0 * log(sqrt(zeta_F / zeta_F_0)) + 0.25 * kt2) * pow(b_T, 2));
-    return C * Ar;
+    return C * Ar / Br;
   }
  
 
