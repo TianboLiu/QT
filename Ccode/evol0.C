@@ -1,6 +1,12 @@
 #include "Lcore.h"
 #include "tmdevol2.h"
+
+#include "TStyle.h"
 #include "TRandom3.h"
+#include "TGraph.h"
+#include "TCanvas.h"
+#include "TH1D.h"
+
 
 using namespace FIT;
 
