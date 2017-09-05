@@ -163,7 +163,7 @@ int main(const int argc, const char * argv[]){
 
     hB->DrawClone("axis");
     for (int i = 0; i < 4; i++){
-      gp[i]->DrawClone("psame");
+      gp[i]->DrawClone("pesame");
       gl[i]->DrawClone("lsame");
     }
 
