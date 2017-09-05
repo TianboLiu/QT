@@ -42,6 +42,12 @@ namespace TMDEVOL{
     return b_T / sqrt(1.0 + pow(b_T / bmax, 2));
   }
 
+  double bstar_bT(const double b_T){
+    double bmax = 0.5;
+    if (b_T < bmax) return b_T;
+    else return bmax;
+  }
+
   double (* bstar)(const double b_T);
 
   double mu_b(const double b_T){

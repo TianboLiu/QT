@@ -1,8 +1,18 @@
 #include "Lcore.h"
-#include "tmdevol.h"
+#include "tmdevol2.h"
 #include "TRandom3.h"
 
 using namespace FIT;
+
+int SetGraph(TGraph * g, int lstyle, int lcolor, double lwidth, int mstyle, int mcolor, double msize){
+  g->SetLineStyle(lstyle);
+  g->SetLineColor(lcolor);
+  g->SetLineWidth(lwidth);
+  g->SetMarkerStyle(mstyle);
+  g->SetMarkerColor(mcolor);
+  g->SetMarkerSize(msize);
+  return 0;
+}
 
 int main(const int argc, const char * argv[]){
 
@@ -90,12 +100,33 @@ int main(const int argc, const char * argv[]){
   if (opt == 2){//evolution
 
     TMDEVOL::Initialize();
-    TMDEVOL::C_factor = & TMDEVOL::C_factor_Model0;
+    TMDEVOL::F_input = & TMDEVOL::F_input_model0;
+
+    double x = 0.1;
+    double kt = 0.1;
+    int color[4] = {1, 4, 2, 6};
+
+    TGraph * gl[4];
+    TGraph * gp[4];
+    for (int i = 0; i < 4; i++){
+      gl[i] = new TGraph(20);
+      gp[i] = new TGraph(1);
+      SetGraph(gl[i], 1, color[i], 1., 20, color[i], 0.5);
+      SetGraph(gp[i], 1, color[i], 1., 20, color[i], 0.5);
+    }
+
+    double ktfit[4] = {0.72, 0.788, 0.773, 0.658};
+    double Q2input[4] = {1.82, 2.88, 5.24, 9.21};
+    for (int i = 0; i < 4; i++){
+      TMDEVOL::kt_model0 = ktfit[i];
+    }
+
     TMDEVOL::kt_model0 = 0.720;
-    cout << TMDEVOL::F_kspace(2, 0.0957, 0.1, sqrt(1.82), 1.82, 1.82) << endl;
-    cout << TMDEVOL::F_kspace(2, 0.0957, 0.2, sqrt(1.82), 1.82, 1.82) << endl;
-    cout << TMDEVOL::xpdf->xfxQ2(2, 0.0957, 1.82) / 0.0957 * exp(-pow(0.1/0.72, 2)) / (M_PI * pow(0.72, 2)) << endl;
-    cout << TMDEVOL::xpdf->xfxQ2(2, 0.0957, 1.82) / 0.0957 * exp(-pow(0.2/0.72, 2)) / (M_PI * pow(0.72, 2)) << endl;
+    TMDEVOL::Q0_model0 = sqrt(1.82);
+    cout << TMDEVOL::F_output(2, 0.0957, 0.1, sqrt(1.82)) << endl;
+    cout << TMDEVOL::F_output(2, 0.0957, 0.2, sqrt(1.82)) << endl;
+    cout << TMDEVOL::xpdf->xfxQ2(2, 0.0957, 1.82) / 0.0957 * exp(-0.25 * pow(0.1 * 0.72, 2)) << endl;
+    cout << TMDEVOL::xpdf->xfxQ2(2, 0.0957, 1.82) / 0.0957 * exp(-0.25 * pow(0.2 * 0.72, 2)) << endl;
 
 
   }
