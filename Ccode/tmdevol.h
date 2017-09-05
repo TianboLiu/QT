@@ -156,7 +156,7 @@ namespace TMDEVOL{
     double par[6] = {(double) flavor, x, mu, zeta_F, zeta_F_0, k_T};
     ROOT::Math::GSLIntegrator ig(ROOT::Math::IntegrationOneDim::kADAPTIVE, 0.0, 1.0e-6);
     ig.SetFunction(&F_kspace_integrand, par);
-    double result = ig.Integral(0.0, Pi / 2.0 - 1.0e-9);
+    double result = ig.Integral(0.0, Pi / 2.0 - 1.0e-12);
     return result;
   }
 
