@@ -77,7 +77,7 @@ namespace TMDEVOL{
     }
     if (order_B > 1){
       double zeta3 = 1.202;//riemann_zeta(3.0)
-      value += pow(xpdf->alphaQ(mu) / Pi, 2) * (pow(C_F / 2.0, 2) * (Pi * Pi - 3.0 / 4.0 - 12.0 * zeta3) + C_F / 2.0 * C_A * (11.0 / 18.0 * Pi * Pi - 193.0 / 24.0 + 3.0 * zeta3) + C_F / 2.0 * T_R * N_f(mu) * (17.0 / 6.0 - 2.0 / 9.0 * Pi * Pi));
+      value += pow(xpdf->alphasQ(mu) / Pi, 2) * (pow(C_F / 2.0, 2) * (Pi * Pi - 3.0 / 4.0 - 12.0 * zeta3) + C_F / 2.0 * C_A * (11.0 / 18.0 * Pi * Pi - 193.0 / 24.0 + 3.0 * zeta3) + C_F / 2.0 * T_R * N_f(mu) * (17.0 / 6.0 - 2.0 / 9.0 * Pi * Pi));
     }
     return value;
   }
@@ -85,7 +85,7 @@ namespace TMDEVOL{
   double S_integrand(const double logmu, void * par){
     double Q = ((double *) par)[0];
     double mu = exp(logmu);
-    double result = 2.0 * log(Q / mu) * A(mu) + B(mu);
+    double result = 2.0 * log(Q / mu) * Afactor(mu) + Bfactor(mu);
     return result;
   }
 
