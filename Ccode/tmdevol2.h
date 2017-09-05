@@ -112,7 +112,7 @@ namespace TMDEVOL{
     double value = 0.0;
     if (order_C > 0){
       if (flavor_i == flavor_j){
-	value += (xpdf->alphaQ(mu) / Pi) * C_F / 2.0 * (1.0 - xi);
+	value += (xpdf->alphasQ(mu) / Pi) * C_F / 2.0 * (1.0 - xi);
       }
     }
     return value;
@@ -141,7 +141,7 @@ namespace TMDEVOL{
   double kt_model0;
   double F_input_model0(const int flavor, const double x, const double b_T){
     double Q0 = Q0_model0;
-    double kt = model0;
+    double kt = kt_model0;
     double S0 = S(b_T, Q0);
     double result = xpdf->xfxQ(flavor, x, Q0) / x * exp(-0.25 * pow(kt * b_T, 2));
     return result * exp(S0);
