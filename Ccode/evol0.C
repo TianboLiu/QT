@@ -111,7 +111,7 @@ int main(const int argc, const char * argv[]){
     TMDEVOL::F_input = & TMDEVOL::F_input_model0;
 
     double x = 0.1;
-    double bt = 0.2;
+    double bt = 0.1;
     int color[4] = {1, 4, 2, 6};
 
     TGraph * gl[4];
@@ -171,9 +171,9 @@ int main(const int argc, const char * argv[]){
     latex.SetTextAlign(12);
     latex.SetTextFont(22);
     latex.SetTextSize(0.05);
-    latex.DrawLatex(1.2, 11.5, "x = 0.1, b_{T} = 0.2 GeV^{-1}");
+    latex.DrawLatex(1.2, 11.5, "x = 0.1, b_{T} = 0.1 GeV^{-1}");
 
-    c0->Print("path/gallery/evol0_x0.1_bt0.2_u.pdf");
+    c0->Print("path/gallery/evol0_x0.1_bt0.1_u.pdf");
 
   }
   
