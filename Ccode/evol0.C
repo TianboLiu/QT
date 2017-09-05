@@ -131,7 +131,7 @@ int main(const int argc, const char * argv[]){
       TMDEVOL::Q0_model0 = Q0input[i];
       gp[i]->SetPoint(0, Q0input[i], TMDEVOL::F_output(flavor, x, bt, Q0input[i]));     
       for (int j = 0; j < 20; j++){
-	Q = 1.5 + 0.1 * j;
+	Q = 1.2 + 0.1 * j;
 	gl[i]->SetPoint(j, Q, TMDEVOL::F_output(flavor, x, bt, Q));
       }		
     }
@@ -139,7 +139,7 @@ int main(const int argc, const char * argv[]){
     TH1D * hB = new TH1D("hB", "", 1, 1.0, 4.0);
     hB->SetStats(0);
     hB->SetMinimum(0.0);
-    hB->SetMaximum(10.0);
+    hB->SetMaximum(15.0);
     hB->GetXaxis()->SetTitle("Q (GeV)");
     hB->GetXaxis()->CenterTitle(true);
     hB->GetXaxis()->SetTitleSize(0.055);
@@ -167,7 +167,7 @@ int main(const int argc, const char * argv[]){
     TLatex latex;
     latex.SetTextAlign(12);
     latex.SetTextFont(22);
-    latex.SetTextSize(0.5);
+    latex.SetTextSize(0.05);
     latex.DrawLatex(1.2, 9.0, "x = 0.1, b_{T} = 0.1 GeV^{-1}");
 
     c0->Print("path/gallery/evol0_x0.1_bt0.1_u.pdf");
