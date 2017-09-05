@@ -136,10 +136,10 @@ int main(const int argc, const char * argv[]){
       }		
     }
 
-    TH1D * hB = new TH1D("hB", "", 1, 1.0, 4.0);
+    TH1D * hB = new TH1D("hB", "", 1, 1.0, 3.5);
     hB->SetStats(0);
     hB->SetMinimum(0.0);
-    hB->SetMaximum(15.0);
+    hB->SetMaximum(13.0);
     hB->GetXaxis()->SetTitle("Q (GeV)");
     hB->GetXaxis()->CenterTitle(true);
     hB->GetXaxis()->SetTitleSize(0.055);
@@ -168,7 +168,7 @@ int main(const int argc, const char * argv[]){
     latex.SetTextAlign(12);
     latex.SetTextFont(22);
     latex.SetTextSize(0.05);
-    latex.DrawLatex(1.2, 9.0, "x = 0.1, b_{T} = 0.1 GeV^{-1}");
+    latex.DrawLatex(1.2, 11.5, "x = 0.1, b_{T} = 0.1 GeV^{-1}");
 
     c0->Print("path/gallery/evol0_x0.1_bt0.1_u.pdf");
 
