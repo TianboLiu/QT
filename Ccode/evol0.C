@@ -156,7 +156,7 @@ int main(const int argc, const char * argv[]){
 
     TCanvas * c0 = new TCanvas("c0", "", 800, 600);
     c0->SetLeftMargin(0.15);
-    c0->SetRightMargin(0.15);
+    c0->SetBottomMargin(0.15);
 
     hB->DrawClone("axis");
     for (int i = 0; i < 4; i++){
