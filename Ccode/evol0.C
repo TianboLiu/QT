@@ -115,7 +115,7 @@ int main(const int argc, const char * argv[]){
     int color[4] = {1, 4, 2, 6};
 
     TGraph * gl[4];
-    TGraph * gp[4];
+    TGraphErrors * gp[4];
     for (int i = 0; i < 4; i++){
       gl[i] = new TGraph(20);
       gp[i] = new TGraphErrors(1);
