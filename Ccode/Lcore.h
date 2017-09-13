@@ -20,6 +20,9 @@ const LHAPDF::PDF * ffpion = LHAPDF::mkPDF("DSSFFlo", 211);
 
 const double Mp = 0.938272;
 const double Mpion = 0.13957;
+const double MZ = 91.1876;
+const double MW = 80.385;
+const double Br_Z_llbar = 0.03366;
 
 namespace DIS{
   int Exchange(double & a, double & b){
@@ -55,6 +58,11 @@ namespace DIS{
       xPDF(xfn, x, Q2, "neutron");
       for (int i = 0; i < 13; i++)
 	xf[i] = xfp[i] * 2.0 + xfn[i];
+      return 0;
+    }
+    else if (strcmp(target, "antiproton") == 0){
+      for (int i = 1; i < 7; i++)
+	Exchange(xf[i], xf[i+6]);
       return 0;
     }
     else {
@@ -161,6 +169,58 @@ namespace SIDIS{
   }
 
 }
+
+namespace DY{
+
+  const double alpha_EM_0 = 1.0 / 137.0;
+  const double alpha_EM_Z = 1.0 / 128.0;
+  const double sinTW2 = 0.2313;//sin theta_W square
+  
+  double (* FUU1DY)(const double * var, const double * par, const char * hadron1, const char * hadron2);
+
+  double Model_FUU1DY_0(const double * var, const double * par, const char * hadron1 = "proton", const char * hadron2 = "proton"){
+    //var: Q2, qT, y, s
+    double x1 = sqrt(var[0] / var[3]) * exp(var[2]);
+    double x2 = sqrt(var[0] / var[3]) * exp(-var[2]);
+    double xf1[13], xf2[13];
+    DIS::xPDF(xf1, x1, var[0], hadron1);
+    DIS::xPDF(xf2, x2, var[0], hadron2);
+    double factor = (pow(2.0 / 3.0, 2) * (xf1[2] * xf2[2+6] + xf1[4] * xf2[4+6] + xf1[6] * xf2[6+6] + xf1[2+6] * xf2[2] + xf1[4+6] * xf2[4] + xf1[6+6] * xf2[6]) + pow(1.0 / 3.0, 2) * (xf1[1] * xf2[1+6] + xf1[3] * xf2[3+6] + xf1[5] * xf2[5+6] + xf1[1+6] * xf2[1] + xf1[3+6] * xf2[3] + xf1[5+6] * xf2[5])) / (x1 * x2);
+    double kt2 = par[0] * par[0];
+    return factor * exp(-var[1] * var[1] / (2.0 * kt2)) / (2.0 * M_PI * kt2);
+  }
+
+  double (* FUU1Z)(const double * var, const double * par, const char * hadron1, const char * hadron2);
+
+  double Model_FUU1Z_0(const double * var, const double * par, const char * hadron1 = "proton", const char * hadron2 = "proton"){
+    //var: Q2, qT, y, s
+    double x1 = sqrt(var[0] / var[3]) * exp(var[2]);
+    double x2 = sqrt(var[0] / var[3]) * exp(-var[2]);
+    double xf1[13], xf2[13];
+    DIS::xPDF(xf1, x1, var[0], hadron1);
+    DIS::xPDF(xf2, x2, var[0], hadron2);
+    double factor = ((pow(0.5 - 2.0 * 2.0 / 3.0 * sinTW2, 2) + pow(0.5, 2)) * (xf1[2] * xf2[2+6] + xf1[4] * xf2[4+6] + xf1[6] * xf2[6+6] + xf1[2+6] * xf2[2] + xf1[4+6] * xf2[4] + xf1[6+6] * xf2[6])
+		     + (pow(0.5 + 2.0 * 1.0 / 3.0 * sinTW2, 2) + pow(-0.5, 2))pow(1.0 / 3.0, 2) * (xf1[1] * xf2[1+6] + xf1[3] * xf2[3+6] + xf1[5] * xf2[5+6] + xf1[1+6] * xf2[1] + xf1[3+6] * xf2[3] + xf1[5+6] * xf2[5])) / (x1 * x2);
+    double kt2 = par[0] * par[0];
+    return factor * exp(-var[1] * var[1] / (2.0 * kt2)) / (2.0 * M_PI * kt2);
+  }
+
+  double dsigmaDY_dQ2dQT2dy(const double * var, const double * par, const char * hadron1 = "proton", const char * hadron2 = "proton"){
+    //var: Q2, qT, y, s
+    double prefactor = (4.0 * M_PI * M_PI * alpha_EM_0 * alpha_EM_0) / (3.0 * var[0] * var[3]) / 3.0;
+    return prefactor * FUU1DY(var, par, hadron1, hadron2);
+  }
+
+  double dsigmaZ_dQT2dy(const double * var, const double * par, const double * hadron1 = "proton", const char * hadron2 = "proton"){
+    //var: Q2, qT, y, s
+    double prefactor = (M_PI * M_PI * alpha_EM_Z) / (var[3] * sinTW2 * (1.0 - sinTW2)) / 3.0;
+    return prefactor * FUU1Z(var, par, hadron1, hadron2);
+  }
+
+  
+}
+
+
 
 namespace FIT{
 
