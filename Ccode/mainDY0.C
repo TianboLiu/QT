@@ -36,7 +36,7 @@ int main(const int argc, const char * argv[]){
     LoadData("path/Data/DY/DY.E288_200.list", 15, "E288_200");
     LoadData("path/Data/DY/DY.E288_300.list", 15, "E288_300");
     LoadData("path/Data/DY/DY.E288_400.list", 15, "E288_400");
-    LoadData("path/Data/DY/DY.E605.list", 15, "E605_800");
+    //LoadData("path/Data/DY/DY.E605.list", 15, "E605_800");
     cout << Npt << endl;
     
     if (Npt == 0) continue;
