@@ -348,7 +348,7 @@ namespace FITDY{
       var[2] = 0.40;
       var[3] = s;
       while (infile >> var[0] >> var[1] >> value >> error[0]){
-	if (CheckValue(var, SelectionT, SelectionTdelta)){
+	if (!CheckValue(var, SelectionT, SelectionTdelta)){
 	  Variable[Npt][0] = var[0] * var[0];
 	  Variable[Npt][1] = var[1];
 	  Variable[Npt][2] = var[2];
