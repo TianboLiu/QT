@@ -459,15 +459,15 @@ namespace FITDY{
       else if (Label[i] == 2){
 	if (Variable[i][0] < pow(11.5, 2)){
 	  theory = (4.0 * M_PI * pow(alpha_EM_0, 2) / (3.0 * Variable[i][3]) * 2.0 * log((sqrt(Variable[i][0]) + 0.5) / (sqrt(Variable[i][0]) - 0.5)))
-	    * (29.0/63.0 * DY::FUU1DY(Variable[i], par, "proton", "proton") + 34.0/63.0 * DY::FUU1DY(Variable[i], par, "prot`on", "neutron"));
+	    * (29.0/63.0 * DY::FUU1DY(Variable[i], par, "proton", "proton") + 34.0/63.0 * DY::FUU1DY(Variable[i], par, "proton", "neutron"));
 	}
 	else if (Variable[i][0] < pow(13.5, 2)){
 	  theory = (4.0 * M_PI * pow(alpha_EM_0, 2) / (3.0 * Variable[i][3]) * 2.0 * log((sqrt(Variable[i][0]) + 1.0) / (sqrt(Variable[i][0]) - 1.0)))
-	    * (29.0/63.0 * DY::FUU1DY(Variable[i], par, "proton", "proton") + 34.0/63.0 * DY::FUU1DY(Variable[i], par, "prot`on", "neutron"));
+	    * (29.0/63.0 * DY::FUU1DY(Variable[i], par, "proton", "proton") + 34.0/63.0 * DY::FUU1DY(Variable[i], par, "proton", "neutron"));
 	}
 	else {
 	  theory = (4.0 * M_PI * pow(alpha_EM_0, 2) / (3.0 * Variable[i][3]) * 2.0 * log((sqrt(Variable[i][0]) + 2.2) / (sqrt(Variable[i][0]) - 2.3)))
-	    * (29.0/63.0 * DY::FUU1DY(Variable[i], par, "proton", "proton") + 34.0/63.0 * DY::FUU1DY(Variable[i], par, "prot`on", "neutron"));
+	    * (29.0/63.0 * DY::FUU1DY(Variable[i], par, "proton", "proton") + 34.0/63.0 * DY::FUU1DY(Variable[i], par, "proton", "neutron"));
 	}
       } 
       else {
