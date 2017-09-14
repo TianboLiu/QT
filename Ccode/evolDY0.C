@@ -39,7 +39,7 @@ int main(const int argc, const char * argv[]){
     TMDEVOL::F_input = & TMDEVOL::F_input_model0;
 
     double x = 0.1;
-    double bt = atoi(argv[2]);
+    double bt = atof(argv[2]);
     int color[12] = {1, 4, 2, 6, 1, 4, 2, 6, 1, 4, 2, 6};
     int lstyle[12] = {1, 3, 5, 1, 3, 5, 1, 3, 5, 1, 3, 5};
     double ktfit[12] = {0.749, 0.895, 0.958, 0.940, 0.933, 1.30, 1.06, 1.06, 0.994, 1.07, 3.15, 1.00};
