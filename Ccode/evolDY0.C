@@ -74,19 +74,16 @@ int main(const int argc, const char * argv[]){
     hB->DrawClone("axis");
       
     double Q = 3.0;
-    for (int i = 0; i < 1; i++){
+    for (int i = 0; i < 12; i++){
       TMDEVOL::kt_model0 = ktfit[i];
       TMDEVOL::Q0_model0 = Qlist[i];
       SetGraph(gl, lstyle[i], color[i], 1., 20, color[i], 1.2);
       SetGraph(gp, 1, color[i], 1., 20, color[i], 1.2);
       gp->SetPoint(0, Qlist[i], TMDEVOL::F_output(flavor, x, bt, Qlist[i]));
-      cout << Qlist[i] << " " << TMDEVOL::F_output(flavor, x, bt, Qlist[i]) << endl;
-      cout << endl;
       gp->SetPointError(0, 0.0, TMDEVOL::F_output(flavor, x, bt, Qlist[i]) * (0.5 * bt * bt * ktfit[i] * dktfit[i]));
       for (int j = 0; j < 20; j++){
-	Q = 3.0 + (18.0 - 3.0) * j;
+	Q = 3.0 + (18.0 - 3.0) / 20 * j;
 	gl->SetPoint(j, Q, TMDEVOL::F_output(flavor, x, bt, Q));
-	cout << Q << " " <<  TMDEVOL::F_output(flavor, x, bt, Q) << endl;
       }
       gp->DrawClone("pesame");
       gl->DrawClone("lsame");
