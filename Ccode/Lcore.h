@@ -341,6 +341,7 @@ namespace FITDY{
     int label = 0;
     double s = 0.0;
     if (strcmp(experiment, "E288_200") == 0){
+      cout << "Loading E288 200 data" << endl;
       label = 1;
       s = pow(200.0 + Mp, 2) - pow(200.0, 2);
       double var[4], value, error[2];
@@ -366,6 +367,7 @@ namespace FITDY{
       return 0;
     }
     if (strcmp(experiment, "E288_300") == 0){
+      cout << "Loading E288 300 data" << endl;
       label = 1;
       s = pow(300.0 + Mp, 2) - pow(300.0, 2);
       double var[4], value, error[2];
@@ -391,6 +393,7 @@ namespace FITDY{
       return 0;
     }
     if (strcmp(experiment, "E288_400") == 0){
+      cout << "Loading E288 400 data" << endl;
       label = 1;
       s = pow(400.0 + Mp, 2) - pow(400.0, 2);
       double var[4], value, error[2];
@@ -416,6 +419,7 @@ namespace FITDY{
       return 0;
     }
     if (strcmp(experiment, "E605_800") == 0){
+      cout << "Loading E605 800 data" << endl;
       label = 2;
       s = pow(800.0 + Mp, 2) - pow(800.0, 2);
       double var[4], value, error[2];
