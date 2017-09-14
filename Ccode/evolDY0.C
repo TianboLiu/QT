@@ -39,7 +39,7 @@ int main(const int argc, const char * argv[]){
     TMDEVOL::F_input = & TMDEVOL::F_input_model0;
 
     double x = 0.1;
-    double bt = 0.1;
+    double bt = atoi(argv[1]);
     int color[12] = {1, 4, 2, 6, 1, 4, 2, 6, 1, 4, 2, 6};
     int lstyle[12] = {1, 3, 5, 1, 3, 5, 1, 3, 5, 1, 3, 5};
     double ktfit[12] = {0.749, 0.895, 0.958, 0.940, 0.933, 1.30, 1.06, 1.06, 0.994, 1.07, 3.15, 1.00};
@@ -52,8 +52,8 @@ int main(const int argc, const char * argv[]){
   
     TH1D * hB = new TH1D("hB", "", 1, 2.5, 18.0);
     hB->SetStats(0);
-    hB->SetMinimum(0.0);
-    hB->SetMaximum(13.0);
+    hB->SetMinimum(2.0);
+    hB->SetMaximum(9.0);
     hB->GetXaxis()->SetTitle("Q (GeV)");
     hB->GetXaxis()->CenterTitle(true);
     hB->GetXaxis()->SetTitleSize(0.055);
@@ -93,9 +93,9 @@ int main(const int argc, const char * argv[]){
     latex.SetTextAlign(12);
     latex.SetTextFont(22);
     latex.SetTextSize(0.05);
-    latex.DrawLatex(3.2, 11.5, "x = 0.1, b_{T} = 0.1 GeV^{-1}");
+    latex.DrawLatex(3.2, 8.5, "x = 0.1, b_{T} = 0.1 GeV^{-1}");
 
-    c0->Print("path/gallery/evolDY0_x0.1_bt0.1_u.pdf");
+    c0->Print(Form("path/gallery/evolDY0_x0.1_bt%.1f_u.pdf", bt));
 
   }
   
