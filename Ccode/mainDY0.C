@@ -14,7 +14,7 @@ int main(const int argc, const char * argv[]){
   double Qlist[12] = {4.5, 5.5, 6.5, 7.5, 8.5, 9.5, 10.5, 11.0, 11.5, 12.5, 13.5, 15.8};
   SelectionTdelta[0] = 0.1;
 
-  double QTmax = 5.0;
+  double QTmax = 10.0;
   double QTmin = 0.0;
 
   //cut
