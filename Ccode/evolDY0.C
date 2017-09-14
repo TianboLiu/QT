@@ -48,7 +48,7 @@ int main(const int argc, const char * argv[]){
     int flavor = 2;
 
     TGraph * gl = new TGraph(20);
-    TGraphErrors * gp = new TGraph(1);
+    TGraphErrors * gp = new TGraphErrors(1);
   
     TH1D * hB = new TH1D("hB", "", 1, 2.5, 18.0);
     hB->SetStats(0);
