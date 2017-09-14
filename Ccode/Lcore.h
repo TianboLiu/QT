@@ -227,6 +227,7 @@ namespace FIT{
   int Npt = 0;
   double Value[3000], Variable[3000][4], Error[3000][2];
   TString Target[3000], Hadron[3000];
+  int Label[3000];
 
   double Parameters[20];
   double ParametersError[20];
