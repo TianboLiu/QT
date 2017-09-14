@@ -341,14 +341,14 @@ namespace FITDY{
     int label = 0;
     double s = 0.0;
     if (strcmp(experiment, "E288_200") == 0){
-      cout << "Loading E288 200 data" << endl;
+      //cout << "Loading E288 200 data" << endl;
       label = 1;
       s = pow(200.0 + Mp, 2) - pow(200.0, 2);
       double var[4], value, error[2];
       var[2] = 0.40;
       var[3] = s;
       while (infile >> var[0] >> var[1] >> value >> error[0]){
-	if (!CheckValue(var, SelectionT, SelectionTdelta)){
+	if (CheckValue(var, SelectionT, SelectionTdelta)){
 	  Variable[Npt][0] = var[0] * var[0];
 	  Variable[Npt][1] = var[1];
 	  Variable[Npt][2] = var[2];
@@ -367,13 +367,13 @@ namespace FITDY{
       return 0;
     }
     if (strcmp(experiment, "E288_300") == 0){
-      cout << "Loading E288 300 data" << endl;
+      //cout << "Loading E288 300 data" << endl;
       label = 1;
       s = pow(300.0 + Mp, 2) - pow(300.0, 2);
       double var[4], value, error[2];
+      var[2] = 0.21;
+      var[3] = s;
       while (infile >> var[0] >> var[1] >> value >> error[0]){
-	var[2] = 0.21;
-	var[3] = s;
 	if (CheckValue(var, SelectionT, SelectionTdelta)){
 	  Variable[Npt][0] = var[0] * var[0];
 	  Variable[Npt][1] = var[1];
@@ -393,13 +393,13 @@ namespace FITDY{
       return 0;
     }
     if (strcmp(experiment, "E288_400") == 0){
-      cout << "Loading E288 400 data" << endl;
+      //cout << "Loading E288 400 data" << endl;
       label = 1;
       s = pow(400.0 + Mp, 2) - pow(400.0, 2);
       double var[4], value, error[2];
+      var[2] = 0.03;
+      var[3] = s;
       while (infile >> var[0] >> var[1] >> value >> error[0]){
-	var[2] = 0.03;
-	var[3] = s;
 	if (CheckValue(var, SelectionT, SelectionTdelta)){
 	  Variable[Npt][0] = var[0] * var[0];
 	  Variable[Npt][1] = var[1];
@@ -419,13 +419,14 @@ namespace FITDY{
       return 0;
     }
     if (strcmp(experiment, "E605_800") == 0){
-      cout << "Loading E605 800 data" << endl;
+      //cout << "Loading E605 800 data" << endl;
       label = 2;
       s = pow(800.0 + Mp, 2) - pow(800.0, 2);
       double var[4], value, error[2];
+      var[2] = 0.0;
+      var[3] = s;
       while (infile >> var[0] >> var[1] >> value >> error[0]){
 	var[2] = asinh(sqrt(s) / var[0] * 0.1 / 2.0);//x_F = 0.1
-	var[3] = s;
 	if (CheckValue(var, SelectionT, SelectionTdelta)){
 	  Variable[Npt][0] = var[0] * var[0];
 	  Variable[Npt][1] = var[1];

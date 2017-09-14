@@ -12,7 +12,7 @@ int main(const int argc, const char * argv[]){
 
   //E288, E605
   double Qlist[12] = {4.5, 5.5, 6.5, 7.5, 8.5, 9.5, 10.5, 11.0, 11.5, 12.5, 13.5, 15.8};
-  SelectionTdelta[0] = 1.0;
+  SelectionTdelta[0] = 0.1;
 
   double QTmax = 5.0;
   double QTmin = 0.0;
@@ -27,7 +27,7 @@ int main(const int argc, const char * argv[]){
   
   //int preNpt = 0;
   for (int i = 0; i < 12; i++){
-    SelectionT[0] = Qlist[i] * Qlist[i];//Q2
+    SelectionT[0] = Qlist[i];//Q
 
     double par[2] = {0.7, 0.4};
    
