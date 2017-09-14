@@ -77,16 +77,16 @@ int main(const int argc, const char * argv[]){
     for (int i = 0; i < 12; i++){
       TMDEVOL::kt_model0 = ktfit[i];
       TMDEVOL::Q0_model0 = Qlist[i];
-      SetGraph(gl[i], lstyle[i], color[i], 1., 20, color[i], 1.2);
-      SetGraph(gp[i], 1style[i], color[i], 1., 20, color[i], 1.2);
-      gp[i]->SetPoint(0, Qlist[i], TMDEVOL::F_output(flavor, x, bt, Qlist[i]));
-      gp[i]->SetPointError(0, 0.0, TMDEVOL::F_output(flavor, x, bt, Qlist[i]) * (0.5 * bt * bt * ktfit[i] * dktfit[i]));
+      SetGraph(gl, lstyle[i], color[i], 1., 20, color[i], 1.2);
+      SetGraph(gp, 1style[i], color[i], 1., 20, color[i], 1.2);
+      gp->SetPoint(0, Qlist[i], TMDEVOL::F_output(flavor, x, bt, Qlist[i]));
+      gp->SetPointError(0, 0.0, TMDEVOL::F_output(flavor, x, bt, Qlist[i]) * (0.5 * bt * bt * ktfit[i] * dktfit[i]));
       for (int j = 0; j < 20; j++){
 	Q = 3.0 + (18.0 - 3.0) * j;
-	gl[i]->SetPoint(j, Q, TMDEVOL::F_output(flavor, x, bt, Q));
+	gl->SetPoint(j, Q, TMDEVOL::F_output(flavor, x, bt, Q));
       }
-      gp[i]->DrawClone("pesame");
-      gl[i]->DrawClone("lsame");
+      gp->DrawClone("pesame");
+      gl->DrawClone("lsame");
     }
 
     TLatex latex;
