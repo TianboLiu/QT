@@ -93,7 +93,7 @@ int main(const int argc, const char * argv[]){
     latex.SetTextAlign(12);
     latex.SetTextFont(22);
     latex.SetTextSize(0.05);
-    latex.DrawLatex(3.2, 8.5, "x = 0.1, b_{T} = 0.1 GeV^{-1}");
+    latex.DrawLatex(3.2, 8.5, Form("x = 0.1, b_{T} = %.1f GeV^{-1}", bt));
 
     c0->Print(Form("path/gallery/evolDY0_x0.1_bt%.1f_u.pdf", bt));
 
