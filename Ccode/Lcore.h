@@ -346,6 +346,7 @@ namespace FITDY{
       s = pow(200.0 + Mp, 2) - pow(200.0, 2);
       double var[4], value, error[2];
       while (infile >> var[0] >> var[1] >> value >> error[0]){
+	cout << var[0] << " " << var[1] << endl;
 	var[2] = 0.40;
 	var[3] = s;
 	if (CheckValue(var, SelectionT, SelectionTdelta)){
