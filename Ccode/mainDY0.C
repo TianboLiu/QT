@@ -20,7 +20,7 @@ int main(const int argc, const char * argv[]){
   //cut
   SelectionT[1] = 5.0;    SelectionTdelta[1] = 5.0;//QT
   SelectionT[2] = 0.0;    SelectionTdelta[2] = 2.0;//y
-  SelectionT[3] = 1.0e4;  SelectionTdelta[3] = 1.0e4;//s
+  SelectionT[3] = 1.0e4;  SelectionTdelta[3] = 2.0e4;//s
  
   FILE * fs = fopen("path/gallery/fit_DY_0.dat", "w");
   fprintf(fs, "Q\t QTmin\t QTmax\t Npt\t X2/dof\t p0\t e0\n");
