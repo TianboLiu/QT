@@ -205,10 +205,38 @@ namespace DY{
     double kt2 = par[0] * par[0];
     return factor / 3.0 * exp(-var[1] * var[1] / (2.0 * kt2)) / (2.0 * M_PI * kt2);
   }
+
+  double Model_FUU1Z_1(const double * var, const double * par, const char * hadron1 = "proton", const char * hadron2 = "proton"){
+    //var: Q2, qT, y, s
+    double x1 = sqrt(var[0] / var[3]) * exp(var[2]);
+    double x2 = sqrt(var[0] / var[3]) * exp(-var[2]);
+    double xf1[13], xf2[13];
+    DIS::xPDF(xf1, x1, var[0], hadron1);
+    DIS::xPDF(xf2, x2, var[0], hadron2);
+    double factor = ((pow(0.5 - 2.0 * 2.0 / 3.0 * sinTW2, 2) + pow(0.5, 2)) * (xf1[2] * xf2[2+6] + xf1[4] * xf2[4+6] + xf1[6] * xf2[6+6] + xf1[2+6] * xf2[2] + xf1[4+6] * xf2[4] + xf1[6+6] * xf2[6])
+		     + (pow(-0.5 + 2.0 * 1.0 / 3.0 * sinTW2, 2) + pow(-0.5, 2)) * (xf1[1] * xf2[1+6] + xf1[3] * xf2[3+6] + xf1[5] * xf2[5+6] + xf1[1+6] * xf2[1] + xf1[3+6] * xf2[3] + xf1[5+6] * xf2[5])) / (x1 * x2);
+    double kt2 = par[0] * par[0];
+    return factor / 3.0 / M_PI;
+  }
+
   
 }
 
+double TestIntegrand(const double y, void * par){
+  double var[4] = {pow(MZ, 2), 1.0, y, pow(1.8e3, 2)};
+  return DY::Model_FUU1Z_1(var, var, "proton", "antiproton");
+}
 
+double Test(){
+  double par = 0.0;
+  ROOT::Math::GSLIntegrator ig(ROOT::Math::IntegrationOneDim::kADAPTIVE, 0.0, 1.0e-6);
+  ig.SetFunction(&TestIntegrand, &par);
+  return ig.Integral(log(MZ / 1.8e3), log(1.8e3 / MZ));
+}
+  
+
+
+  
 
 namespace FIT{
 
