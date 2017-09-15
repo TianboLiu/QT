@@ -674,9 +674,9 @@ namespace FITZ{
 	others[3] = Variable[i][3];
 	for (int j = 0; j < 20; j++)
 	  others[j+4] = par[j];
-	//theory = par[1] * ig.Integral(0.5 * log(Variable[i][0] / Variable[i][3]), 0.5 * log(Variable[i][3] / Variable[i][0]))
-	//  * 2.0 * Variable[i][1] * (M_PI * M_PI * alpha_EM_Z / (Variable[i][3] * sinTW2 * (1.0 - sinTW2))) * 0.03366;
-	if (true)
+	theory = ig.Integral(0.5 * log(Variable[i][0] / Variable[i][3]), 0.5 * log(Variable[i][3] / Variable[i][0]))
+	  * 2.0 * Variable[i][1] * (M_PI * M_PI * alpha_EM_Z / (Variable[i][3] * sinTW2 * (1.0 - sinTW2))) * 0.03366;
+	if (false)
 	  theory = par[1] * Variable[i][1] * exp(-Variable[i][1] * Variable[i][1] / (2.0 * par[0] * par[0])) / (2.0 * M_PI * par[0] * par[0]);
       }
       else {
