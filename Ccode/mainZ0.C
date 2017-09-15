@@ -8,7 +8,7 @@ int main(const int argc, const char * argv[]){
   //const int opt = atoi(argv[1]);
 
   DY::FUU1Z = & DY::Model_FUU1Z_0;
-  PrintLevel = 1;
+  PrintLevel = 0;
 
   //CDF D0
   SelectionT[0] = MZ;
@@ -25,21 +25,22 @@ int main(const int argc, const char * argv[]){
   FILE * fs = fopen("path/gallery/fit_Z_0.dat", "w");
   fprintf(fs, "Q\t QTmin\t QTmax\t Npt\t X2/dof\t p0\t e0\n");
   
-  double par[2] = {0.7, 0.4};
+  double par[2] = {0.7, 1.4};
    
   Npt = 0;
          
-  //LoadData("path/Data/DY/DY.CDF_RunI.list", 20, "CDF_RunI");
+  LoadData("path/Data/DY/DY.CDF_RunI.list", 20, "CDF_RunI");
   LoadData("path/Data/DY/DY.CDF_RunII.list", 20, "CDF_RunII");
-  //LoadData("path/Data/DY/DY.D0_RunI.list", 20, "D0_RunI");
-  //LoadData("path/Data/DY/DY.D0_RunII.list", 20, "D0_RunII");
+  LoadData("path/Data/DY/DY.D0_RunI.list", 20, "D0_RunI");
+  LoadData("path/Data/DY/DY.D0_RunII.list", 20, "D0_RunII");
   cout << Npt << endl;
   
   
-  Minimize(1, par);
-  fprintf(fs, "%.2f\t %.2f\t %.2f\t %d\t %.2f\t %.2E\t %.1E\n", MZ, QTmin, QTmax, Npt, Parameters[1] / (Npt - 1), Parameters[0], ParametersError[0]);
+  Minimize(2, par);
+  fprintf(fs, "%.2f\t %.2f\t %.2f\t %d\t %.2f\t %.2E\t %.1E\n", MZ, QTmin, QTmax, Npt, Parameters[2] / (Npt - 1), Parameters[0], ParametersError[0]);
 
-  cout << Parameters[1] / (Npt - 1) << endl;
+  cout << Parameters[2] / (Npt - 1) << endl;
+  cout << Parameters[0] << " " << Parameters[1] << endl;
   
   fclose(fs);
 
