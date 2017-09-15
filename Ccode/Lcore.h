@@ -535,7 +535,7 @@ namespace FITZ{
 	  Variable[Npt][0] = var[0] * var[0];
 	  Variable[Npt][1] = var[1];
 	  Variable[Npt][3] = var[3];
-	  Value[Npt] = value * 1.0e-10 * pow(1.0 / 0.197, 2) / 1.114;
+	  Value[Npt] = value * 1.0e-10 * pow(1.0 / 0.197, 2);
 	  Error[Npt][0] = error[0] * 1.0e-10 * pow(1.0 / 0.197, 2);
 	  Error[Npt][1] = 0.0;
 	  Label[Npt] = label;
