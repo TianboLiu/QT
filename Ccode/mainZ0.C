@@ -18,7 +18,7 @@ int main(const int argc, const char * argv[]){
   double QTmin = 0.0;
 
   //cut
-  SelectionT[1] = 2.0;    SelectionTdelta[1] = 2.0;//QT
+  SelectionT[1] = 3.0;    SelectionTdelta[1] = 3.0;//QT
   SelectionT[2] = 0.0;    SelectionTdelta[2] = 20.0;//y
   SelectionT[3] = 1.0e8;  SelectionTdelta[3] = 2.0e8;//s
  
