@@ -638,7 +638,7 @@ namespace FITZ{
     double theory = 0.0;
     ROOT::Math::GSLIntegrator ig(ROOT::Math::IntegrationOneDim::kADAPTIVE, 0.0, 1.0e-6);
     double others[24];
-    ig.SetFunction(&S_integrand, &others);
+    ig.SetFunction(&IntegrandPPbar, &others);
     for (int i = 0; i < Npt; i++){
       if (Label[i] == 3){
 	others[0] = Variable[i][0];
