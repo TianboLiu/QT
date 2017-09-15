@@ -204,19 +204,6 @@ namespace DY{
     double kt2 = par[0] * par[0];
     return factor / 3.0 * exp(-var[1] * var[1] / (2.0 * kt2)) / (2.0 * M_PI * kt2);
   }
-
-  double dsigmaDY_dQ2dQT2dy(const double * var, const double * par, const char * hadron1 = "proton", const char * hadron2 = "proton"){
-    //var: Q2, qT, y, s
-    double prefactor = (4.0 * M_PI * M_PI * alpha_EM_0 * alpha_EM_0) / (3.0 * var[0] * var[3]);
-    return prefactor * FUU1DY(var, par, hadron1, hadron2);
-  }
-
-  double dsigmaZ_dQT2dy(const double * var, const double * par, const char * hadron1 = "proton", const char * hadron2 = "proton"){
-    //var: Q2, qT, y, s
-    double prefactor = (M_PI * M_PI * alpha_EM_Z) / (var[3] * sinTW2 * (1.0 - sinTW2));
-    return prefactor * FUU1Z(var, par, hadron1, hadron2);
-  }
-
   
 }
 
@@ -505,6 +492,196 @@ namespace FITDY{
  
 }
 
+namespace FITZ{
+
+  int Npt = 0;
+  double Value[3000], Variable[3000][4], Error[3000][2];
+  int Label[3000];
+
+  double Parameters[20];
+  double ParametersError[20];
+
+  double SelectionT[4];
+  double SelectionTdelta[4];
+
+  int PrintLevel = 1;
+
+  int CheckValue(const double x[], const double t[], const double dt[]){
+    if (pow(x[0] - t[0], 2) < pow(dt[0], 2) &&
+	pow(x[1] - t[1], 2) < pow(dt[1], 2) && 
+	pow(x[2] - t[2], 2) < pow(dt[2], 2) && 
+	pow(x[3] - t[3], 2) < pow(dt[3], 2)
+	) return 1;
+    else return 0;
+  }
+  
+  int LoadData(const char * filename, const int skiprows = 19, const char * experiment = "CDF_RunI"){
+    ifstream infile(filename);
+    char ltmp[300];
+    for (int i = 0; i < skiprows; i++)
+      infile.getline(ltmp, 300);
+    int label = 0;
+    double s = 0.0;
+    if (strcmp(experiment, "CDF_RunI") == 0){
+      //cout << "Loading CDF RunI data" << endl;
+      label = 3;
+      s = pow(1.8e3, 2);
+      double var[4], value, error[2];
+      var[0] = MZ;
+      var[3] = s;
+      while (infile >> var[1] >> value >> error[0]){
+	if (CheckValue(var, SelectionT, SelectionTdelta)){
+	  Variable[Npt][0] = var[0] * var[0];
+	  Variable[Npt][1] = var[1];
+	  Variable[Npt][3] = var[3];
+	  Value[Npt] = value * 1.0e-10 * pow(1.0 / 0.197, 2);
+	  Error[Npt][0] = error[0] * 1.0e-10 * pow(1.0 / 0.197, 2);
+	  Error[Npt][1] = 0.0;
+	  Label[Npt] = label;
+	  if (PrintLevel > 0){
+	    cout << "  " << Npt << " " << Variable[Npt][0] << " " << Variable[Npt][1] << " " << Variable[Npt][3] << " " << Value[Npt] << " " << Error[Npt][0] << Error[Npt][1] << endl;
+	  }
+	  Npt++;
+	}
+      }
+      infile.close();
+      return 0;
+    }
+    if (strcmp(experiment, "CDF_RunII") == 0){
+      //cout << "Loading CDF RunII data" << endl;
+      label = 3;
+      s = pow(1.96e3, 2);
+      double var[4], value, error[2];
+      var[0] = MZ;
+      var[3] = s;
+      while (infile >> var[1] >> value >> error[0] >> error[1]){
+	if (CheckValue(var, SelectionT, SelectionTdelta)){
+	  Variable[Npt][0] = var[0] * var[0];
+	  Variable[Npt][1] = var[1];
+	  Variable[Npt][3] = var[3];
+	  Value[Npt] = value * 1.0e-10 * pow(1.0 / 0.197, 2);
+	  Error[Npt][0] = error[0] * 1.0e-10 * pow(1.0 / 0.197, 2);
+	  Error[Npt][1] = error[1] * 1.0e-10 * pow(1.0 / 0.197, 2);
+	  Label[Npt] = label;
+	  if (PrintLevel > 0){
+	    cout << "  " << Npt << " " << Variable[Npt][0] << " " << Variable[Npt][1] << " " << Variable[Npt][3] << " " << Value[Npt] << " " << Error[Npt][0] << Error[Npt][1] << endl;
+	  }
+	  Npt++;
+	}
+      }
+      infile.close();
+      return 0;
+    }
+    if (strcmp(experiment, "D0_RunI") == 0){
+      //cout << "Loading D0 RunI data" << endl;
+      label = 3;
+      s = pow(1.8e3, 2);
+      double var[4], value, error[2];
+      var[0] = MZ;
+      var[3] = s;
+      while (infile >> var[1] >> value >> error[0]){
+	if (CheckValue(var, SelectionT, SelectionTdelta)){
+	  Variable[Npt][0] = var[0] * var[0];
+	  Variable[Npt][1] = var[1];
+	  Variable[Npt][3] = var[3];
+	  Value[Npt] = value * 1.0e-10 * pow(1.0 / 0.197, 2);
+	  Error[Npt][0] = error[0] * 1.0e-10 * pow(1.0 / 0.197, 2);
+	  Error[Npt][1] = 0.0;
+	  Label[Npt] = label;
+	  if (PrintLevel > 0){
+	    cout << "  " << Npt << " " << Variable[Npt][0] << " " << Variable[Npt][1] << " " << Variable[Npt][3] << " " << Value[Npt] << " " << Error[Npt][0] << Error[Npt][1] << endl;
+	  }
+	  Npt++;
+	}
+      }
+      infile.close();
+      return 0;
+    }
+    if (strcmp(experiment, "D0_RunII") == 0){
+      //cout << "Loading D0 RunII data" << endl;
+      label = 3;
+      s = pow(1.96e3, 2);
+      double var[4], value, error[2];
+      var[0] = MZ;
+      var[3] = s;
+      while (infile >> var[1] >> value >> error[0] >> error[1]){
+	if (CheckValue(var, SelectionT, SelectionTdelta)){
+	  Variable[Npt][0] = var[0] * var[0];
+	  Variable[Npt][1] = var[1];
+	  Variable[Npt][3] = var[3];
+	  Value[Npt] = 255.8 * value * 1.0e-10 * pow(1.0 / 0.197, 2);
+	  Error[Npt][0] = Value[Npt] * sqrt((pow(error[0], 2) + pow(error[1], 2)) / pow(value, 2));
+	  Error[Npt][1] = Value[Npt] * 16.0 / 255.8;
+	  Label[Npt] = label;
+	  if (PrintLevel > 0){
+	    cout << "  " << Npt << " " << Variable[Npt][0] << " " << Variable[Npt][1] << " " << Variable[Npt][3] << " " << Value[Npt] << " " << Error[Npt][0] << Error[Npt][1] << endl;
+	  }
+	  Npt++;
+	}
+      }
+      infile.close();
+      return 0;
+    }
+    return 0;
+  }
+
+  double IntegrandPPbar(const double y, void * others){
+    double * var = (double *) others;
+    double variable[4] = {var[0], var[1], y, var[3]};
+    double result = DY::FUU1Z(variable, &var[4], "proton", "antiproton");
+    return result;
+  }
+  
+  double Chi2(const double * par){
+    double sum = 0.0;
+    double theory = 0.0;
+    ROOT::Math::GSLIntegrator ig(ROOT::Math::IntegrationOneDim::kADAPTIVE, 0.0, 1.0e-6);
+    double others[24];
+    ig.SetFunction(&S_integrand, &others);
+    for (int i = 0; i < Npt; i++){
+      if (Label[i] == 3){
+	others[0] = Variable[i][0];
+	others[1] = Variable[i][1];
+	others[3] = Variable[i][3];
+	for (int j = 0; j < 20; j++)
+	  others[j+4] = par[j];
+	theory = ig.Integral(0.5 * log(Variable[i][0] / Variable[i][3]), 0.5 * log(Variable[i][3] / Variable[i][0]))
+	  * 2.0 * Variable[i][1] * (M_PI * M_PI * alpha_EM_Z / (Variable[i][3] * sinTW2 * (1.0 - sinTW2))) * 0.03366;
+      }
+      else {
+	cout << "Wrong Label" << endl;
+	return -1;
+      }
+      sum += pow(theory - Value[i], 2) / (pow(Error[i][0], 2) + pow(Error[i][1], 2));
+    }
+    return sum;
+  }
+
+  double Minimize(const int NPAR, const double * init){
+    ROOT::Math::Minimizer * min = ROOT::Math::Factory::CreateMinimizer("Minuit2", "Migrad");
+    min->SetMaxFunctionCalls(100000);
+    //min->SetPrecision(1.0e-14);
+    min->SetTolerance(1.0e-3);
+    min->SetPrintLevel(0);
+    ROOT::Math::Functor f(&Chi2, NPAR);
+    min->SetFunction(f);
+    for (int i = 0; i < NPAR; i++){
+      min->SetVariable(i, Form("p%d", i), init[i], 1.0e-4);
+    }
+    min->Minimize();
+    const double * xs = min->X();
+    const double * es = min->Errors();
+    for (int i = 0; i < NPAR; i++){
+      Parameters[i] = xs[i];
+      ParametersError[i] = es[i];
+    }
+    const double chi2 = min->MinValue();
+    Parameters[NPAR] = chi2;
+    return chi2;
+  }
+
+ 
+}
 
 
 
