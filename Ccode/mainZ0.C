@@ -8,7 +8,7 @@ int main(const int argc, const char * argv[]){
   //const int opt = atoi(argv[1]);
 
   DY::FUU1Z = & DY::Model_FUU1Z_0;
-  PrintLevel = 0;
+  PrintLevel = 1;
 
   //CDF D0
   SelectionT[0] = MZ;
