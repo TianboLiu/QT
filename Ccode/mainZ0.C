@@ -37,8 +37,7 @@ int main(const int argc, const char * argv[]){
   
   
   Minimize(1, par);
-  fprintf(fs, "%.2f\t %.2f\t %.2f\t %d\t %.2f\t %.2E\t %.1E\n", Qlist[i], QTmin, QTmax, Npt, Parameters[1] / (Npt - 1), Parameters[0], ParametersError[0]);
-}
+  fprintf(fs, "%.2f\t %.2f\t %.2f\t %d\t %.2f\t %.2E\t %.1E\n", MZ, QTmin, QTmax, Npt, Parameters[1] / (Npt - 1), Parameters[0], ParametersError[0]);
 
   fclose(fs);
 
