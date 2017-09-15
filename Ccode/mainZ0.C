@@ -30,15 +30,17 @@ int main(const int argc, const char * argv[]){
   Npt = 0;
          
   LoadData("path/Data/DY/DY.CDF_RunI.list", 20, "CDF_RunI");
-  LoadData("path/Data/DY/DY.CDF_RunII.list", 20, "CDF_RunII");
-  LoadData("path/Data/DY/DY.D0_RunI.list", 20, "D0_RunI");
-  LoadData("path/Data/DY/DY.D0_RunII.list", 20, "D0_RunII");
+  //LoadData("path/Data/DY/DY.CDF_RunII.list", 20, "CDF_RunII");
+  //LoadData("path/Data/DY/DY.D0_RunI.list", 20, "D0_RunI");
+  //LoadData("path/Data/DY/DY.D0_RunII.list", 20, "D0_RunII");
   cout << Npt << endl;
   
   
   Minimize(1, par);
   fprintf(fs, "%.2f\t %.2f\t %.2f\t %d\t %.2f\t %.2E\t %.1E\n", MZ, QTmin, QTmax, Npt, Parameters[1] / (Npt - 1), Parameters[0], ParametersError[0]);
 
+  cout << Parameters[1] / (Npt - 1) << endl;
+  
   fclose(fs);
 
   return 0;

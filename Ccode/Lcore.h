@@ -540,7 +540,7 @@ namespace FITZ{
 	  Error[Npt][1] = 0.0;
 	  Label[Npt] = label;
 	  if (PrintLevel > 0){
-	    cout << "  " << Npt << " " << Variable[Npt][0] << " " << Variable[Npt][1] << " " << Variable[Npt][3] << " " << Value[Npt] << " " << Error[Npt][0] << Error[Npt][1] << endl;
+	    cout << "  " << Npt << " " << Variable[Npt][0] << " " << Variable[Npt][1] << " " << Variable[Npt][3] << " " << Value[Npt] << " " << Error[Npt][0] << " " << Error[Npt][1] << endl;
 	  }
 	  Npt++;
 	}
@@ -565,7 +565,7 @@ namespace FITZ{
 	  Error[Npt][1] = error[1] * 1.0e-10 * pow(1.0 / 0.197, 2);
 	  Label[Npt] = label;
 	  if (PrintLevel > 0){
-	    cout << "  " << Npt << " " << Variable[Npt][0] << " " << Variable[Npt][1] << " " << Variable[Npt][3] << " " << Value[Npt] << " " << Error[Npt][0] << Error[Npt][1] << endl;
+	    cout << "  " << Npt << " " << Variable[Npt][0] << " " << Variable[Npt][1] << " " << Variable[Npt][3] << " " << Value[Npt] << " " << Error[Npt][0] << " " << Error[Npt][1] << endl;
 	  }
 	  Npt++;
 	}
@@ -590,7 +590,7 @@ namespace FITZ{
 	  Error[Npt][1] = 0.0;
 	  Label[Npt] = label;
 	  if (PrintLevel > 0){
-	    cout << "  " << Npt << " " << Variable[Npt][0] << " " << Variable[Npt][1] << " " << Variable[Npt][3] << " " << Value[Npt] << " " << Error[Npt][0] << Error[Npt][1] << endl;
+	    cout << "  " << Npt << " " << Variable[Npt][0] << " " << Variable[Npt][1] << " " << Variable[Npt][3] << " " << Value[Npt] << " " << Error[Npt][0] << " " << Error[Npt][1] << endl;
 	  }
 	  Npt++;
 	}
@@ -615,7 +615,7 @@ namespace FITZ{
 	  Error[Npt][1] = Value[Npt] * 16.0 / 255.8;
 	  Label[Npt] = label;
 	  if (PrintLevel > 0){
-	    cout << "  " << Npt << " " << Variable[Npt][0] << " " << Variable[Npt][1] << " " << Variable[Npt][3] << " " << Value[Npt] << " " << Error[Npt][0] << Error[Npt][1] << endl;
+	    cout << "  " << Npt << " " << Variable[Npt][0] << " " << Variable[Npt][1] << " " << Variable[Npt][3] << " " << Value[Npt] << " " << Error[Npt][0] << " " << Error[Npt][1] << endl;
 	  }
 	  Npt++;
 	}
