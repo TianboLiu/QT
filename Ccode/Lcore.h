@@ -563,7 +563,7 @@ namespace FITZ{
 	  Variable[Npt][0] = var[0] * var[0];
 	  Variable[Npt][1] = var[1];
 	  Variable[Npt][3] = var[3];
-	  Value[Npt] = value * 1.0e-10 * pow(1.0 / 0.197, 2);
+	  Value[Npt] = value * 1.0e-10 * pow(1.0 / 0.197, 2) / 1.114;
 	  Error[Npt][0] = error[0] * 1.0e-10 * pow(1.0 / 0.197, 2);
 	  Error[Npt][1] = 0.0;
 	  Label[Npt] = label;
@@ -588,7 +588,7 @@ namespace FITZ{
 	  Variable[Npt][0] = var[0] * var[0];
 	  Variable[Npt][1] = var[1];
 	  Variable[Npt][3] = var[3];
-	  Value[Npt] = value * 1.0e-10 * pow(1.0 / 0.197, 2);
+	  Value[Npt] = value * 1.0e-10 * pow(1.0 / 0.197, 2) / 1.049;
 	  Error[Npt][0] = error[0] * 1.0e-10 * pow(1.0 / 0.197, 2);
 	  Error[Npt][1] = error[1] * 1.0e-10 * pow(1.0 / 0.197, 2);
 	  Label[Npt] = label;
@@ -613,7 +613,7 @@ namespace FITZ{
 	  Variable[Npt][0] = var[0] * var[0];
 	  Variable[Npt][1] = var[1];
 	  Variable[Npt][3] = var[3];
-	  Value[Npt] = value * 1.0e-10 * pow(1.0 / 0.197, 2);
+	  Value[Npt] = value * 1.0e-10 * pow(1.0 / 0.197, 2) / 0.992;
 	  Error[Npt][0] = error[0] * 1.0e-10 * pow(1.0 / 0.197, 2);
 	  Error[Npt][1] = 0.0;
 	  Label[Npt] = label;
@@ -638,7 +638,7 @@ namespace FITZ{
 	  Variable[Npt][0] = var[0] * var[0];
 	  Variable[Npt][1] = var[1];
 	  Variable[Npt][3] = var[3];
-	  Value[Npt] = 255.8 * value * 1.0e-10 * pow(1.0 / 0.197, 2);
+	  Value[Npt] = 255.8 * value * 1.0e-10 * pow(1.0 / 0.197, 2) / 1.048;
 	  Error[Npt][0] = Value[Npt] * sqrt((pow(error[0], 2) + pow(error[1], 2)) / pow(value, 2));
 	  Error[Npt][1] = Value[Npt] * 16.0 / 255.8;
 	  Label[Npt] = label;
