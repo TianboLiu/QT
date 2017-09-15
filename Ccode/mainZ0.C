@@ -30,9 +30,9 @@ int main(const int argc, const char * argv[]){
   Npt = 0;
          
   LoadData("path/Data/DY/DY.CDF_RunI.list", 20, "CDF_RunI");
-  LoadData("path/Data/DY/DY.CDF_RunII.list", 20, "CDF_RunII");
-  LoadData("path/Data/DY/DY.D0_RunI.list", 20, "D0_RunI");
-  LoadData("path/Data/DY/DY.D0_RunII.list", 20, "D0_RunII");
+  //LoadData("path/Data/DY/DY.CDF_RunII.list", 20, "CDF_RunII");
+  //LoadData("path/Data/DY/DY.D0_RunI.list", 20, "D0_RunI");
+  //LoadData("path/Data/DY/DY.D0_RunII.list", 20, "D0_RunII");
   cout << Npt << endl;
   
   
