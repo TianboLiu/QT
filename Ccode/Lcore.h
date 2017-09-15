@@ -12,6 +12,7 @@
 #include "Math/Minimizer.h"
 #include "Math/Factory.h"
 #include "Math/Functor.h"
+#include "Math/GSLIntegrator.h"
 
 using namespace std;
 
