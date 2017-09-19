@@ -1,0 +1,167 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 8.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[      4674,        158]
+NotebookOptionsPosition[      3870,        126]
+NotebookOutlinePosition[      4416,        146]
+CellTagsIndexPosition[      4373,        143]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["TMD Evolution", "Title",
+ CellChangeTimes->{{3.714845503335514*^9, 3.714845520585498*^9}}],
+
+Cell[CellGroupData[{
+
+Cell["Initialization", "Section",
+ CellChangeTimes->{{3.714845527812338*^9, 3.714845531257595*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Clear", "[", "\"\<Global`*\>\"", "]"}], ";"}]], "Input",
+ CellChangeTimes->{{3.7148455413750277`*^9, 3.714845573083527*^9}, {
+  3.714845618236454*^9, 3.714845630675461*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Format", "Section",
+ CellChangeTimes->{{3.714845650443755*^9, 3.714845651640168*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"Format", "[", 
+    RowBox[{"bT", ",", "TraditionalForm"}], "]"}], ":=", 
+   RowBox[{"Style", "[", 
+    RowBox[{
+    "\"\<\!\(\*SubscriptBox[\(b\), \(\[Perpendicular]\)]\)\>\"", ",", 
+     RowBox[{"FontColor", "\[Rule]", "Red"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Format", "[", 
+    RowBox[{"b1", ",", "TraditionalForm"}], "]"}], ":=", 
+   RowBox[{"Style", "[", 
+    RowBox[{"\"\<\!\(\*SubscriptBox[\(b\), \(1\)]\)\>\"", ",", 
+     RowBox[{"FontColor", "\[Rule]", "Red"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Format", "[", 
+    RowBox[{"b2", ",", "TraditionalForm"}], "]"}], ":=", 
+   RowBox[{"Style", "[", 
+    RowBox[{"\"\<\!\(\*SubscriptBox[\(b\), \(2\)]\)\>\"", ",", 
+     RowBox[{"FontColor", "\[Rule]", "Red"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Format", "[", 
+    RowBox[{"kT", ",", "TraditionalForm"}], "]"}], ":=", 
+   RowBox[{"Style", "[", 
+    RowBox[{
+    "\"\<\!\(\*SubscriptBox[\(k\), \(\[Perpendicular]\)]\)\>\"", ",", 
+     RowBox[{"FontColor", "\[Rule]", "Blue"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Format", "[", 
+    RowBox[{"k1", ",", "TraditionalForm"}], "]"}], ":=", 
+   RowBox[{"Style", "[", 
+    RowBox[{"\"\<\!\(\*SubscriptBox[\(k\), \(1\)]\)\>\"", ",", 
+     RowBox[{"FontColor", "\[Rule]", "Blue"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Format", "[", 
+    RowBox[{"k2", ",", "TraditionalForm"}], "]"}], ":=", 
+   RowBox[{"Style", "[", 
+    RowBox[{"\"\<\!\(\*SubscriptBox[\(k\), \(2\)]\)\>\"", ",", 
+     RowBox[{"FontColor", "\[Rule]", "Blue"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Format", "[", 
+    RowBox[{"\[Mu]", ",", "TraditionalForm"}], "]"}], ":=", 
+   RowBox[{"Style", "[", 
+    RowBox[{"\"\<\[Mu]\>\"", ",", 
+     RowBox[{"FontColor", "\[Rule]", 
+      RowBox[{"RGBColor", "[", 
+       RowBox[{"0", ",", "0.3", ",", "0.7"}], "]"}]}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Format", "[", 
+    RowBox[{"Q", ",", "TraditionalForm"}], "]"}], ":=", 
+   RowBox[{"Style", "[", 
+    RowBox[{"\"\<Q\>\"", ",", 
+     RowBox[{"FontColor", "\[Rule]", 
+      RowBox[{"RGBColor", "[", 
+       RowBox[{"0", ",", "0.3", ",", "0.7"}], "]"}]}]}], "]"}]}], 
+  ";"}]}], "Input",
+ CellChangeTimes->{{3.714845655215366*^9, 3.714845939946825*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["CSS", "Section",
+ CellChangeTimes->{{3.714845969371271*^9, 3.714845969760495*^9}}],
+
+Cell[BoxData["F"], "Input",
+ CellChangeTimes->{3.714846088122888*^9}]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{1440, 795},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+ShowSelection->True,
+Magnification:>FEPrivate`If[
+  FEPrivate`Equal[FEPrivate`$VersionNumber, 6.], 1.5, 1.5 Inherited],
+FrontEndVersion->"8.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (November 6, \
+2010)",
+StyleDefinitions->FrontEnd`FileName[{"Report"}, "StandardReport.nb", 
+  CharacterEncoding -> "UTF-8"]
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[579, 22, 96, 1, 111, "Title"],
+Cell[CellGroupData[{
+Cell[700, 27, 99, 1, 103, "Section"],
+Cell[802, 30, 208, 4, 54, "Input"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[1047, 39, 91, 1, 103, "Section"],
+Cell[1141, 42, 2504, 71, 216, "Input"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[3682, 118, 88, 1, 103, "Section"],
+Cell[3773, 121, 69, 1, 54, "Input"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
