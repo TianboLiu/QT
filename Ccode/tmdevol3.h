@@ -97,7 +97,7 @@ namespace TMDEVOL{
     double par = Q;
     ROOT::Math::GSLIntegrator ig(ROOT::Math::IntegrationOneDim::kADAPTIVE, 0.0, 1.0e-6);
     ig.SetFunction(&S_integrand, &par);
-    double result = ig.Integral(log(C1 / b_T), log(Q));
+    double result = ig.Integral(log(mu_b(b_T)), log(Q));
     return result;
   }
 
