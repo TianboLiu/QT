@@ -10,8 +10,13 @@ using namespace std;
 
 double Parameters[5] = {0.1, 0.1, 0.1, 0.1, 0.1};
 
-double F_NP_model(const int flavor, const double x, const double b_T){
-  double value = exp(-Parameters[0] * pow(b_T, Parameters[1]));
-  return Parameters[2] * value;
+double F_NP_1(const int flavor, const double x, const double b_T){
+  return 1.0;
 }
+
+double F_NP_N(const int flavor, const double x, const double b_T){
+  return Parameters[0];
+}
+
+
 
