@@ -14,6 +14,7 @@ int Npt = 0;
 double Variable[2000][4], Value[2000], Errors[2000][2];
 int Observable[2000];
 bool FlagQ[2000];
+bool FlagQT[2000];
 
 /* Observable list
    0: DY p Pt cross section Edsigma/d3p, [Q, QT, y, s]
@@ -30,6 +31,18 @@ int SetFlagQ(const double Q, const double dQ){
     }
     else {
       FlagQ[i] = false;
+    }
+  }
+  return 0;
+}
+
+int SetFlagQT(const double QT){
+  for (int i = 0; i < Npt; i++){
+    if (Variable[i][1] < QT){
+      FlagQT[i] = true;
+    }
+    else {
+      FlagQT[i] = false;
     }
   }
   return 0;

@@ -38,7 +38,7 @@ namespace TMDEVOL{
   }
 
   double bstar_sharp(const double b_T){
-    double bmax = 0.5;
+    double bmax = 1.0;
     if (b_T < bmax) return b_T;
     else return bmax;
   }
@@ -142,27 +142,28 @@ namespace TMDEVOL{
     double z = x / xi;
     double sum = 0.0;
     for (int j = 1; j <= 6; j++){
-      sum += C_ij(flavor, j, z, mu) * xpdf->xfxQ(j, xi, mu);
+      sum += C_ij(flavor, j, z, mu) * xpdf->xfxQ(j, xi, mu) / xi;
     }
     for (int j = -1; j >= -6; j--){
-      sum += C_ij(flavor, j, z, mu) * xpdf->xfxQ(j, xi, mu);
+      sum += C_ij(flavor, j, z, mu) * xpdf->xfxQ(j, xi, mu) / xi;
     }
-    sum += C_ij(flavor, 21, z, mu) * xpdf->xfxQ(21, xi, mu);
+    sum += C_ij(flavor, 21, z, mu) * xpdf->xfxQ(21, xi, mu) / xi;
     return sum / xi;
   }
 
   double F_col(const int flavor, const double x, const double b_T){
+    if (order_C == 0) return xpdf->xfxQ(flavor, x, mu_b(b_T)) / x; 
     double par[3] = {((double) flavor) + 1e-3, x, mu_b(b_T)};
     ROOT::Math::GSLIntegrator ig(ROOT::Math::IntegrationOneDim::kADAPTIVE, 0.0, 1.0e-6);
     ig.SetFunction(&F_col_integrand, par);
     double value = ig.Integral(x, 1.0 - 1e-9);
     for (int j = 1; j <= 6; j++){
-      value += C_ij_1(flavor, j, mu_b(b_T)) * xpdf->xfxQ(j, x, mu_b(b_T));
+      value += C_ij_1(flavor, j, mu_b(b_T)) * xpdf->xfxQ(j, x, mu_b(b_T)) / x;
     }
     for (int j = -1; j >= -6; j--){
-      value += C_ij_1(flavor, j, mu_b(b_T)) * xpdf->xfxQ(j, x, mu_b(b_T));
+      value += C_ij_1(flavor, j, mu_b(b_T)) * xpdf->xfxQ(j, x, mu_b(b_T)) / x;
     }
-    value += C_ij_1(flavor, 21, mu_b(b_T)) * xpdf->xfxQ(21, x, mu_b(b_T));
+    value += C_ij_1(flavor, 21, mu_b(b_T)) * xpdf->xfxQ(21, x, mu_b(b_T)) / x;
     return value;
   }    
   

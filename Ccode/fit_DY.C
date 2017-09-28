@@ -72,8 +72,8 @@ double dsigma_DY(const double Q, const double QT, const double y, const double s
   double par[4] = {Q, QT, y, s};
   ROOT::Math::GSLIntegrator ig(ROOT::Math::IntegrationOneDim::kADAPTIVE, 0.0, 1.0e-6);
   ig.SetFunction(&dsigma_DY_integrand, par);
-  //double result = ig.Integral(1e-6, M_PI/2.0 - 1e-2);
-  double result = ig.Integral(0.1, 0.2);
+  double result = ig.Integral(1e-6, M_PI/2.0 - 1e-2);
+  //double result = ig.Integral(0.1, 0.2);
   return result;
 }
 
@@ -84,7 +84,7 @@ double Chi2(const double * par = Parameters){
   double theory;
   double sum = 0.0;
   for (int i = 0; i < Npt; i++){
-    if (!FlagQ[i]) continue;
+    if (!(FlagQ[i] && FlagQT[i])) continue;
     if (Observable[i] == 0){//E288
       dProtonA = 1.0;
       dProtonB = 78.0 / 195.0;
@@ -138,7 +138,7 @@ double Minimize(const int NPAR, const double * init){
 int CountPoints(){
   int n = 0;
   for (int i = 0; i < Npt; i++){
-    if (FlagQ[i]) n++;
+    if (FlagQ[i] && FlagQT[i]) n++;
   }
   return n;
 }
@@ -162,10 +162,12 @@ int main(const int argc, const char * argv[]){
 
     double Q = atof(argv[2]);
     SetFlagQ(Q, 1e-3);
+    SetFlagQT(2.0);
 
     int npt = CountPoints();
     cout << "Npoints: " << npt << " " << Npt << endl;
 
+    TMDEVOL::Initialize();
     TMDEVOL::F_NP = & F_NP_1;
     NPar = 0;
 
@@ -174,7 +176,7 @@ int main(const int argc, const char * argv[]){
     //	cout << Variable[i][0] << " " << Variable[i][1] << " " << Variable[i][2] << " " << Variable[i][3] << endl;
     //}
 
-    cout << Chi2(Parameters) << endl;
+    cout << Chi2(Parameters) / npt << endl;
     
   }
 
