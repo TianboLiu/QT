@@ -53,9 +53,9 @@ namespace TMDEVOL{
 
   double N_f(const double mu){
     double value = 3.0;
-    if (mu > xpdf->quarkThreshold(4)) value = 4.0;
-    if (mu > xpdf->quarkThreshold(5)) value = 5.0;
-    if (mu > xpdf->quarkThreshold(6)) value = 6.0;
+    if (mu > 1.3) value = 4.0;
+    if (mu > 4.5) value = 5.0;
+    if (mu > 172.0) value = 6.0;
     return value;
   }
   
