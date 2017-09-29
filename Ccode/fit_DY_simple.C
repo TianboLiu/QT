@@ -32,6 +32,11 @@ double F_TMD_simple(const int flavor, const double x, const double b_T, const do
   return Parameters[0] * col * trans;
 }
 
+double F_TMD_evol(const int flavor, const double x, const double b_T, const double Q){
+  return F_TMD_simple(flavor, x, b_T, Q0) * exp(TMDEVOL::S(b_T, Q0) - TMDEVOL::S(b_T, Q));
+}
+
+  
 int GetPDFs(double * pdfs, const double dProton, const double x, const double Q){
   pdfs[2] = dProton * xpdf->xfxQ(2, x, Q) + (1.0 - dProton) * xpdf->xfxQ(1, x, Q);
   pdfs[1] = dProton * xpdf->xfxQ(1, x, Q) + (1.0 - dProton) * xpdf->xfxQ(2, x, Q);
@@ -75,8 +80,8 @@ double dsigma_DY_integrand(const double b_T, void * par){
   //double b_T = tan(ATan_b_T);
   double sigma0 = 4.0 * pow(M_PI, 2) * pow(alpha_EM_0, 2) / (9.0 * s * Q * Q);
   double pdfA[13], pdfB[13];
-  GetPDFs(pdfA, dProtonA, xA, Q);
-  GetPDFs(pdfB, dProtonB, xB, Q);
+  GetTMDs(pdfA, dProtonA, xA, b_T, Q);
+  GetTMDs(pdfB, dProtonB, xB, b_T, Q);
   double convol =
     pow(e_u, 2) * (pdfA[2] * pdfB[2+6] + pdfA[2+6] * pdfB[2]
 		   + pdfA[4] * pdfB[4+6] + pdfA[4+6] * pdfB[4])
@@ -84,7 +89,7 @@ double dsigma_DY_integrand(const double b_T, void * par){
     pow(e_d, 2) * (pdfA[1] * pdfB[1+6] + pdfA[1+6] * pdfB[1]
 		   + pdfA[3] * pdfB[3+6] + pdfA[3+6] * pdfB[3]
 		   + pdfA[5] * pdfB[5+6] + pdfA[5+6] * pdfB[5]);
-  double result = b_T * ROOT::Math::cyl_bessel_j(0, b_T * QT) / (2.0 * M_PI) * sigma0 * convol * pow(Parameters[0], 2) * exp(-2.0 * Parameters[2] * pow(b_T, Parameters[1]));
+  double result = b_T * ROOT::Math::cyl_bessel_j(0, b_T * QT) / (2.0 * M_PI) * sigma0 * convol;
   return result;// / pow(cos(ATan_b_T), 2);
 }
 
@@ -94,7 +99,7 @@ double dsigma_DY(const double Q, const double QT, const double y, const double s
   ROOT::Math::GSLIntegrator ig(ROOT::Math::IntegrationOneDim::kADAPTIVE, 0.0, 1.0e-6);
   ig.SetFunction(&dsigma_DY_integrand, par);
   //double result = ig.Integral(1e-3, M_PI / 2.0 - 1e-6);
-  double result = ig.Integral(1e-6, 50.0);
+  double result = ig.Integral(1e-6, 70.0);
   return result;
 }
 
@@ -176,11 +181,12 @@ int main(const int argc, const char * argv[]){
     return 0;
   }
 
-
   int task = atoi(argv[1]);
   option = atoi(argv[2]);
 
   if (task == 0){
+    F_TMD = & F_TMD_evol;
+    TMDEVOL::Initialize();
     
     LoadData_DY("path/Data/DY/DY.E288_200.list", "E288_200");
     LoadData_DY("path/Data/DY/DY.E288_300.list", "E288_300");
@@ -202,6 +208,7 @@ int main(const int argc, const char * argv[]){
     
     for (int j = 0; j < 10; j++){
       Q = 4.5 + j;
+      Q0 = Q;
       SetFlagQ(Q, 1e-3);
       SetFlagQT(112.0);
       npt = CountPoints();
@@ -302,20 +309,13 @@ int main(const int argc, const char * argv[]){
   if (task == 10){
     F_TMD = &F_TMD_simple;
 
-    cout << "hi" << endl;
-    return 0;
-    
-    TMDEVOL::order_C = 0;
     TMDEVOL::Initialize();
-    cout << TMDEVOL::Afactor(10.0) << endl;
-    //cout << TMDEVOL::S_cal(0.1, 10.0) << endl; 
-    return 0;
-      
+          
     double b1 = 0.1;
     double b2 = 0.2;
     double Q0;
 
-    ifstream infile("results/fit_E288_simple_1.dat");
+    ifstream infile("results/fit_E288_simple_0.dat");
     char tmp[300];
     infile.getline(tmp, 300);
 
@@ -333,13 +333,13 @@ int main(const int argc, const char * argv[]){
     h0->GetXaxis()->SetTitle("Q (GeV)");
     h0->GetXaxis()->CenterTitle(true);
     h0->GetXaxis()->SetTitleSize(0.055);
-    h0->GetXaxis()->SetTitleOffset(1.15);
+    h0->GetXaxis()->SetTitleOffset(1.05);
     h0->GetXaxis()->SetLabelSize(0.055);
     h0->GetXaxis()->SetNdivisions(6, 5, 0);
     h0->GetYaxis()->SetTitle("f^u(x, b)");
     h0->GetYaxis()->CenterTitle(true);
     h0->GetYaxis()->SetTitleSize(0.055);
-    h0->GetYaxis()->SetTitleOffset(1.15);
+    h0->GetYaxis()->SetTitleOffset(1.05);
     h0->GetYaxis()->SetLabelSize(0.055);
     h0->GetYaxis()->SetNdivisions(6, 5, 0);
 
@@ -359,7 +359,12 @@ int main(const int argc, const char * argv[]){
       Q[i] = 4.5 + 0.2 * i;
 
     int j = 0;
-    while(infile >> Q0 >> temp >> temp >> Parameters[0] >> Parameters[1] >> Parameters[2]){
+    p1.SetMarkerStyle(20);
+    p1.SetMarkerSize(0.5);
+    p2.SetMarkerStyle(20);
+    p2.SetMarkerSize(0.5);
+    while(infile >> Q0 >> temp >> temp >> Parameters[0] >> Parameters[1] >> Parameters[2] >> temp >> temp >> temp){
+      cout << Parameters[0] << " " << Parameters[1] << " " << Parameters[2] << endl;
       p1.SetPoint(0, Q0, F_TMD(2, 0.1, b1, Q0));
       p2.SetPoint(0, Q0, F_TMD(2, 0.1, b2, Q0));
       for (int i = 0; i < 50; i++){
@@ -376,6 +381,7 @@ int main(const int argc, const char * argv[]){
       c0->cd(2);
       p2.DrawClone("psame");
       g2.DrawClone("lsame");
+      j++;
     }
     infile.close();
     

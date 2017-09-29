@@ -102,6 +102,21 @@ namespace TMDEVOL{
     return result;
   }
 
+  double _Alogmu(const double logmu, void * par){
+    double mu = exp(logmu);
+    return Afactor(mu);
+  }
+  
+  double S_evol(const double b_T, const double Q0, const double Q){//S(Q) - S(Q0)
+    double par = Q0;
+    ROOT::Math::GSLIntegrator ig(ROOT::Math::IntegrationOneDim::kADAPTIVE, 0.0, 1.0e-6);
+    ig.SetFunction(&S_integrand, &par);
+    double result1 = ig.Integral(log(Q0), log(Q));
+    ig.SetFunction(&_Alogmu, &par);
+    double result2 = ig.Integral(log(mu_b(b_T)), log(Q));
+    return result1 + result2 * 2.0 * log(Q / Q0);
+  }
+
   double S_blist[200];
   double S_value[200];
   double S_Q = -1.0;
