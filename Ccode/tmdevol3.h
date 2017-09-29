@@ -10,6 +10,7 @@
 #include "TMath.h"
 #include "Math/GSLIntegrator.h"
 #include "Math/SpecFuncMathMore.h"
+#include "Math/Interpolator.h"
 
 using namespace std;
 
@@ -93,12 +94,31 @@ namespace TMDEVOL{
     return result;
   }
 
-  double S(const double b_T, const double Q){
+  double S_cal(const double b_T, const double Q){
     double par = Q;
     ROOT::Math::GSLIntegrator ig(ROOT::Math::IntegrationOneDim::kADAPTIVE, 0.0, 1.0e-6);
     ig.SetFunction(&S_integrand, &par);
     double result = ig.Integral(log(mu_b(b_T)), log(Q));
     return result;
+  }
+
+  double S_blist[200];
+  double S_value[200];
+  double S_Q = -1.0;
+  ROOT::Math::Interpolator S_inter(200, ROOT::Math::Interpolation::kCSPLINE);
+
+  double S(const double b_T, const double Q){
+    if (b_T < 1e-3 || b_T > 1.5)
+      return S_cal(b_T, Q);
+    if (Q != S_Q){
+      S_Q = Q;
+      for (int i = 0; i < 200; i++){
+	S_blist[i] = i * (1.5 - 1e-3) / 199.0 + 1e-3;
+	S_value[i] = S_cal(S_blist[i], S_Q);
+      }
+      S_inter.SetData(200, S_blist, S_value);
+    }
+    return S_inter.Eval(b_T);
   }
 
   double C_ij_1(const int i, const int j, const double mu){
@@ -187,13 +207,18 @@ namespace TMDEVOL{
   }		      		    
 
   int Initialize(){
-    order_C = 0;
+    //order_C = 0;
     order_A = 2;
     order_B = 1;
     bstar = & bstar_bT;
     g_K = & g_K_zero;
     F_NP = & F_NP_gaus;
-    xpdf = LHAPDF::mkPDF("CJ15lo", 0);
+    if (order_C == 0)
+      xpdf = LHAPDF::mkPDF("CJ15lo", 0);
+    else if (order_C == 1)
+      xpdf = LHAPDF::mkPDF("CJ15nlo", 0);
+    else
+      cout << "order_C not set" << endl;
     return 0;
   }
 }

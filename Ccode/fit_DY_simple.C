@@ -18,41 +18,27 @@ double dProtonB = 1.0;
 
 double Q0;
 
-int dF_TMD(const int flavor, const double x, const double b_T, const double Q){
-  double step = 1.0e-4;
-  double value = (TMDEVOL::F_TMD(flavor, x, b_T + step, Q) - TMDEVOL::F_TMD(flavor, x, b_T - step, Q)) / (2.0 * step);
-  return value;
-}
-
-
 double (* F_TMD)(const int flavor, const double x, const double b_T, const double Q);
-
-double bmax = 1.0;
-double F_TMD_largeb(const int flavor, const double x, const double b_T, const double Q){
-  double bmax = 1.0;
-  double a = Parameters[1];
-  double c = -dF_TMD(flavor, x, bmax, Q) / TMDEVOL::F_TMD(flavor, x, bmax, Q) / (a * pow(bmax, a - 1.0));
-  return TMDEVOL::F_TMD(flavor, x, bmax, Q) * exp(-c * (pow(b_T, a) - pow(bmax, a)));
-}
-
-double F_TMD_full(const int flavor, const double x, const double b_T, const double Q){
-  if (b_T <= bmax) return TMDEVOL::F_TMD(flavor, x, b_T, Q);
-  else return F_TMD_largeb(flavor, x, b_T, Q);
-}
 
 double F_TMD_simple(const int flavor, const double x, const double b_T, const double Q){
   double col = TMDEVOL::xpdf->xfxQ(flavor, x, Q) / x;
   double trans = exp(-Parameters[2] * pow(b_T, Parameters[1]));
   return Parameters[0] * col * trans;
 }
-  
 
-double F_NP_1(const int flavor, const double x, const double b_T){
-  return 1.0;
-}
-
-double F_NP_N(const int flavor, const double x, const double b_T){
-  return Parameters[0];
+int GetPDFs(double * pdfs, const double dProton, const double x, const double Q){
+  pdfs[2] = dProton * TMDEVOL::xpdf->xfxQ(2, x, Q) + (1.0 - dProton) * TMDEVOL::xpdf->xfxQ(1, x, Q);
+  pdfs[1] = dProton * TMDEVOL::xpdf->xfxQ(1, x, Q) + (1.0 - dProton) * TMDEVOL::xpdf->xfxQ(2, x, Q);
+  pdfs[2+6] = dProton * TMDEVOL::xpdf->xfxQ(-2, x, Q) + (1.0 - dProton) * TMDEVOL::xpdf->xfxQ(-1, x, Q);
+  pdfs[1+6] = dProton * TMDEVOL::xpdf->xfxQ(-1, x, Q) + (1.0 - dProton) * TMDEVOL::xpdf->xfxQ(-2, x, Q);
+  pdfs[0] = TMDEVOL::xpdf->xfxQ(21, x, Q);
+  for (int i = 3; i <= 6; i++){
+    pdfs[i] = TMDEVOL::xpdf->xfxQ(i, x, Q);
+    pdfs[i+6] = TMDEVOL::xpdf->xfxQ(-i, x, Q);
+  }
+  for (int i = 0; i < 13; i++)
+    pdfs[i] = pdfs[i] / x;
+  return 0;  
 }
 
 int GetTMDs(double * tmds, const double dProton, const double x, const double b_T, const double Q){
@@ -82,17 +68,17 @@ double dsigma_DY_integrand(const double ATan_b_T, void * par){
   double xB = Q / sqrt(s) * exp(-y);
   double b_T = tan(ATan_b_T);
   double sigma0 = 4.0 * pow(M_PI, 2) * pow(alpha_EM_0, 2) / (9.0 * s * Q * Q);
-  double tmdA[13], tmdB[13];
-  GetTMDs(tmdA, dProtonA, xA, b_T, Q);
-  GetTMDs(tmdB, dProtonB, xB, b_T, Q);
+  double pdfA[13], pdfB[13];
+  GetPDFs(pdfA, dProtonA, xA, Q);
+  GetPDFs(pdfB, dProtonB, xB, Q);
   double convol =
-    pow(e_u, 2) * (tmdA[2] * tmdB[2+6] + tmdA[2+6] * tmdB[2]
-		   + tmdA[4] * tmdB[4+6] + tmdA[4+6] * tmdB[4])
+    pow(e_u, 2) * (pdfA[2] * pdfB[2+6] + pdfA[2+6] * pdfB[2]
+		   + pdfA[4] * pdfB[4+6] + pdfA[4+6] * pdfB[4])
     +
-    pow(e_d, 2) * (tmdA[1] * tmdB[1+6] + tmdA[1+6] * tmdB[1]
-		   + tmdA[3] * tmdB[3+6] + tmdA[3+6] * tmdB[3]
-		   + tmdA[5] * tmdB[5+6] + tmdA[5+6] * tmdB[5]);
-  double result = b_T * ROOT::Math::cyl_bessel_j(0, b_T * QT) / (2.0 * M_PI) * sigma0 * convol;
+    pow(e_d, 2) * (pdfA[1] * pdfB[1+6] + pdfA[1+6] * pdfB[1]
+		   + pdfA[3] * pdfB[3+6] + pdfA[3+6] * pdfB[3]
+		   + pdfA[5] * pdfB[5+6] + pdfA[5+6] * pdfB[5]);
+  double result = b_T * ROOT::Math::cyl_bessel_j(0, b_T * QT) / (2.0 * M_PI) * sigma0 * convol * pow(Parameters[0], 2) * exp(-2.0 * Parameters[2] * pow(b_T, Parameters[1]));
   return result / pow(cos(ATan_b_T), 2);
 }
 
@@ -100,7 +86,7 @@ double dsigma_DY(const double Q, const double QT, const double y, const double s
   double par[4] = {Q, QT, y, s};
   ROOT::Math::GSLIntegrator ig(ROOT::Math::IntegrationOneDim::kADAPTIVE, 0.0, 1.0e-6);
   ig.SetFunction(&dsigma_DY_integrand, par);
-  double result = ig.Integral(1e-3, M_PI / 2.0 - 1e-6);
+  double result = ig.Integral(0.0, M_PI / 2.0 - 1e-6);
   return result;
 }
 
@@ -197,9 +183,7 @@ int main(const int argc, const char * argv[]){
 
     TMDEVOL::order_C = 0;
     TMDEVOL::Initialize();
-    TMDEVOL::F_NP = & F_NP_N;
-
-    bmax = 1.0;
+  
     F_TMD = & F_TMD_simple;
     NPar = 0;
 
@@ -211,49 +195,6 @@ int main(const int argc, const char * argv[]){
     cout << Chi2(Parameters) / npt << endl;
     
   }
-
-  
-  if (task == -1){
-    TMDEVOL::order_C = 1;
-    TMDEVOL::Initialize();
-    TMDEVOL::F_NP = & F_NP_1;
-    //TMDEVOL::bstar = & TMDEVOL::bstar_sharp;
-
-    int flavor = 1;
-    double x = 0.1;
-    double b_T;
-    double bmax = 1.0;
-    TGraph * g0 = new TGraph(50);
-    TGraph * g1 = new TGraph(50);
-    TGraph * g2 = new TGraph(50);
-
-    F_TMD = & F_TMD_full;
-    
-    for (int i = 0; i < 50; i++){
-      cout << i << endl;
-      b_T = 0.03 * i + 0.01;
-      if (b_T <= bmax) F_TMD = & TMDEVOL::F_TMD;
-      else F_TMD = & F_TMD_largeb;
-      g0->SetPoint(i, b_T, F_TMD(flavor, x, b_T, 5.0));
-      g1->SetPoint(i, b_T, F_TMD(flavor, x, b_T, 10.0));
-      g2->SetPoint(i, b_T, F_TMD(flavor, x, b_T, 15.0));
-    }
-
-    g0->SetLineColor(1);
-    g1->SetLineColor(4);
-    g2->SetLineColor(2);
-
-    
-    TCanvas * c0 = new TCanvas("c0", "", 800, 600);
-    g0->Draw("al");
-    g1->Draw("lsame");
-    g2->Draw("lsame");
-
-    c0->Print("c0.pdf");
-  }
-
-
-
 
   
   return 0;
