@@ -108,6 +108,7 @@ namespace TMDEVOL{
   ROOT::Math::Interpolator S_inter(200, ROOT::Math::Interpolation::kCSPLINE);
 
   double S(const double b_T, const double Q){
+    return S_cal(b_T, Q);
     if (b_T < 1e-3 || b_T > 1.5)
       return S_cal(b_T, Q);
     if (Q != S_Q){

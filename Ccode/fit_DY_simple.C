@@ -9,7 +9,9 @@
 #include "Math/Functor.h"
 #include "Math/GSLIntegrator.h"
 #include "TCanvas.h"
+#include "TPad.h"
 #include "TGraph.h"
+#include "TH1D.h"
 
 using namespace std;
 LHAPDF::PDF * xpdf = LHAPDF::mkPDF("CJ15lo", 0);
@@ -296,6 +298,90 @@ int main(const int argc, const char * argv[]){
     }
     fclose(fs);
   }
+
+  if (task == 10){
+    F_TMD = &F_TMD_simple;
+
+    cout << "hi" << endl;
+    return 0;
+    
+    TMDEVOL::order_C = 0;
+    TMDEVOL::Initialize();
+    cout << TMDEVOL::Afactor(10.0) << endl;
+    //cout << TMDEVOL::S_cal(0.1, 10.0) << endl; 
+    return 0;
+      
+    double b1 = 0.1;
+    double b2 = 0.2;
+    double Q0;
+
+    ifstream infile("results/fit_E288_simple_1.dat");
+    char tmp[300];
+    infile.getline(tmp, 300);
+
+    int colorlist[10] = {1, 4, 2, 6, 7, 1, 4, 2, 6, 7};
+    TGraph g1(50);
+    TGraph p1(1);
+    TGraph g2(50);
+    TGraph p2(50);
+    double temp;
+
+    TH1D * h0 = new TH1D("h0", "", 1, 3.5, 15.5);
+    h0->SetStats(0);
+    h0->SetMinimum(0);
+    h0->SetMaximum(11.0);
+    h0->GetXaxis()->SetTitle("Q (GeV)");
+    h0->GetXaxis()->CenterTitle(true);
+    h0->GetXaxis()->SetTitleSize(0.055);
+    h0->GetXaxis()->SetTitleOffset(1.15);
+    h0->GetXaxis()->SetLabelSize(0.055);
+    h0->GetXaxis()->SetNdivisions(6, 5, 0);
+    h0->GetYaxis()->SetTitle("f^u(x, b)");
+    h0->GetYaxis()->CenterTitle(true);
+    h0->GetYaxis()->SetTitleSize(0.055);
+    h0->GetYaxis()->SetTitleOffset(1.15);
+    h0->GetYaxis()->SetLabelSize(0.055);
+    h0->GetYaxis()->SetNdivisions(6, 5, 0);
+
+    TCanvas * c0 = new TCanvas("c0", "", 800, 1200);
+    c0->Divide(1, 2);
+
+    gPad->SetLeftMargin(0.15);
+    gPad->SetBottomMargin(0.15);
+
+    c0->cd(1);
+    h0->DrawClone("AXIS");
+    c0->cd(2);
+    h0->DrawClone("AXIS");
+    
+    double Q[50];
+    for (int i = 0; i < 50; i++)
+      Q[i] = 4.5 + 0.2 * i;
+
+    int j = 0;
+    while(infile >> Q0 >> temp >> temp >> Parameters[0] >> Parameters[1] >> Parameters[2]){
+      p1.SetPoint(0, Q0, F_TMD(2, 0.1, b1, Q0));
+      p2.SetPoint(0, Q0, F_TMD(2, 0.1, b2, Q0));
+      for (int i = 0; i < 50; i++){
+	g1.SetPoint(i, Q[i], F_TMD(2, 0.1, b1, Q0) * exp(TMDEVOL::S(b1, Q0) - TMDEVOL::S(b1, Q[i])));
+	g2.SetPoint(i, Q[i], F_TMD(2, 0.1, b2, Q0) * exp(TMDEVOL::S(b2, Q0) - TMDEVOL::S(b2, Q[i])));
+      }
+      p1.SetMarkerColor(colorlist[j]);
+      p2.SetMarkerColor(colorlist[j]);
+      g1.SetLineColor(colorlist[j]);
+      g2.SetLineColor(colorlist[j]);
+      c0->cd(1);
+      p1.DrawClone("psame");
+      g1.DrawClone("lsame");
+      c0->cd(2);
+      p2.DrawClone("psame");
+      g2.DrawClone("lsame");
+    }
+    infile.close();
+    
+    c0->Print("results/evol_E288_simple.pdf");
+  }
+  
   
   return 0;
 }
