@@ -1,6 +1,9 @@
+#include "LHAPDF/LHAPDF.h"
+
 #include "tmdevol3.h"
 #include "load.h"
 
+#include "TString.h"
 #include "Math/Minimizer.h"
 #include "Math/Factory.h"
 #include "Math/Functor.h"
@@ -9,10 +12,11 @@
 #include "TGraph.h"
 
 using namespace std;
+LHAPDF::PDF * xpdf = LHAPDF::mkPDF("CJ15lo", 0);
 
 int NPar = 5;
-double Parameters[5] = {1.0, 1.0 / 3.0, 0.1, 0.1, 0.1};
-double ParametersErrors[5] = {0.1, 0.1, 0.1, 0.1, 0.1};
+double Parameters[5] = {1.0, 6.0 / 3.0, 1.0, 0.1, 0.1};
+double ParametersErrors[5] = {0.0, 0.1, 0.1, 0.1, 0.1};
 double dProtonA = 1.0;
 double dProtonB = 1.0;
 
@@ -21,20 +25,20 @@ double Q0;
 double (* F_TMD)(const int flavor, const double x, const double b_T, const double Q);
 
 double F_TMD_simple(const int flavor, const double x, const double b_T, const double Q){
-  double col = TMDEVOL::xpdf->xfxQ(flavor, x, Q) / x;
+  double col = xpdf->xfxQ(flavor, x, Q) / x;
   double trans = exp(-Parameters[2] * pow(b_T, Parameters[1]));
   return Parameters[0] * col * trans;
 }
 
 int GetPDFs(double * pdfs, const double dProton, const double x, const double Q){
-  pdfs[2] = dProton * TMDEVOL::xpdf->xfxQ(2, x, Q) + (1.0 - dProton) * TMDEVOL::xpdf->xfxQ(1, x, Q);
-  pdfs[1] = dProton * TMDEVOL::xpdf->xfxQ(1, x, Q) + (1.0 - dProton) * TMDEVOL::xpdf->xfxQ(2, x, Q);
-  pdfs[2+6] = dProton * TMDEVOL::xpdf->xfxQ(-2, x, Q) + (1.0 - dProton) * TMDEVOL::xpdf->xfxQ(-1, x, Q);
-  pdfs[1+6] = dProton * TMDEVOL::xpdf->xfxQ(-1, x, Q) + (1.0 - dProton) * TMDEVOL::xpdf->xfxQ(-2, x, Q);
-  pdfs[0] = TMDEVOL::xpdf->xfxQ(21, x, Q);
+  pdfs[2] = dProton * xpdf->xfxQ(2, x, Q) + (1.0 - dProton) * xpdf->xfxQ(1, x, Q);
+  pdfs[1] = dProton * xpdf->xfxQ(1, x, Q) + (1.0 - dProton) * xpdf->xfxQ(2, x, Q);
+  pdfs[2+6] = dProton * xpdf->xfxQ(-2, x, Q) + (1.0 - dProton) * xpdf->xfxQ(-1, x, Q);
+  pdfs[1+6] = dProton * xpdf->xfxQ(-1, x, Q) + (1.0 - dProton) * xpdf->xfxQ(-2, x, Q);
+  pdfs[0] = xpdf->xfxQ(21, x, Q);
   for (int i = 3; i <= 6; i++){
-    pdfs[i] = TMDEVOL::xpdf->xfxQ(i, x, Q);
-    pdfs[i+6] = TMDEVOL::xpdf->xfxQ(-i, x, Q);
+    pdfs[i] = xpdf->xfxQ(i, x, Q);
+    pdfs[i+6] = xpdf->xfxQ(-i, x, Q);
   }
   for (int i = 0; i < 13; i++)
     pdfs[i] = pdfs[i] / x;
@@ -58,7 +62,7 @@ int GetTMDs(double * tmds, const double dProton, const double x, const double b_
 const double alpha_EM_0 = 1.0 / 137.0;
 const double e_u = 2.0 / 3.0;
 const double e_d = -1.0 / 3.0;
-double dsigma_DY_integrand(const double ATan_b_T, void * par){
+double dsigma_DY_integrand(const double b_T, void * par){
   double * param = (double *) par;
   double Q = param[0];
   double QT = param[1];
@@ -66,7 +70,7 @@ double dsigma_DY_integrand(const double ATan_b_T, void * par){
   double s = param[3];
   double xA = Q / sqrt(s) * exp(y);
   double xB = Q / sqrt(s) * exp(-y);
-  double b_T = tan(ATan_b_T);
+  //double b_T = tan(ATan_b_T);
   double sigma0 = 4.0 * pow(M_PI, 2) * pow(alpha_EM_0, 2) / (9.0 * s * Q * Q);
   double pdfA[13], pdfB[13];
   GetPDFs(pdfA, dProtonA, xA, Q);
@@ -79,14 +83,16 @@ double dsigma_DY_integrand(const double ATan_b_T, void * par){
 		   + pdfA[3] * pdfB[3+6] + pdfA[3+6] * pdfB[3]
 		   + pdfA[5] * pdfB[5+6] + pdfA[5+6] * pdfB[5]);
   double result = b_T * ROOT::Math::cyl_bessel_j(0, b_T * QT) / (2.0 * M_PI) * sigma0 * convol * pow(Parameters[0], 2) * exp(-2.0 * Parameters[2] * pow(b_T, Parameters[1]));
-  return result / pow(cos(ATan_b_T), 2);
+  return result;// / pow(cos(ATan_b_T), 2);
 }
 
 double dsigma_DY(const double Q, const double QT, const double y, const double s){
   double par[4] = {Q, QT, y, s};
+  //cout << Q << " " << QT << " " << y << " " << s << endl;
   ROOT::Math::GSLIntegrator ig(ROOT::Math::IntegrationOneDim::kADAPTIVE, 0.0, 1.0e-6);
   ig.SetFunction(&dsigma_DY_integrand, par);
-  double result = ig.Integral(0.0, M_PI / 2.0 - 1e-6);
+  //double result = ig.Integral(1e-3, M_PI / 2.0 - 1e-6);
+  double result = ig.Integral(1e-6, 50.0);
   return result;
 }
 
@@ -126,6 +132,7 @@ double Chi2(const double * par = Parameters){
   return sum;
 }
 
+int option = 0;
 double Minimize(const int NPAR, const double * init){
   ROOT::Math::Minimizer * min = ROOT::Math::Factory::CreateMinimizer("Minuit2", "Migrad");
   min->SetMaxFunctionCalls(100000);
@@ -134,9 +141,13 @@ double Minimize(const int NPAR, const double * init){
   min->SetPrintLevel(0);
   ROOT::Math::Functor f(&Chi2, NPAR);
   min->SetFunction(f);
-  for (int i = 0; i < NPAR; i++){
-    min->SetVariable(i, "p", init[i], 1.0e-4);
-  }
+  //for (int i = 0; i < NPAR; i++){
+  //  min->SetVariable(i, "p", init[i], 1.0e-4);
+  //}
+  min->SetVariable(0, "N", init[0], 1e-4);
+  if (option == 0) min->SetFixedVariable(0, "N", 1.0);
+  min->SetLimitedVariable(1, "alpha", init[1], 1e-4, 0.01, 10.0);
+  min->SetLowerLimitedVariable(2, "c", init[2], 1e-4, 0.001);
   min->Minimize();
   const double * xs = min->X();
   const double * es = min->Errors();
@@ -165,37 +176,126 @@ int main(const int argc, const char * argv[]){
 
 
   int task = atoi(argv[1]);
+  option = atoi(argv[2]);
 
   if (task == 0){
+    
     LoadData_DY("path/Data/DY/DY.E288_200.list", "E288_200");
     LoadData_DY("path/Data/DY/DY.E288_300.list", "E288_300");
     LoadData_DY("path/Data/DY/DY.E288_400.list", "E288_400");
-    LoadData_DY("path/Data/DY/DY.E605.list", "E605");
-    LoadData_DY("path/Data/DY/DY.E772.list", "E772");
+    //LoadData_DY("path/Data/DY/DY.E605.list", "E605");
+    //LoadData_DY("path/Data/DY/DY.E772.list", "E772");
 
-    double Q = atof(argv[2]);
-    Q0 = Q;
-    SetFlagQ(Q, 1e-3);
-    SetFlagQT(2.0);
-
-    int npt = CountPoints();
-    cout << "Npoints: " << npt << " " << Npt << endl;
-
-    TMDEVOL::order_C = 0;
-    TMDEVOL::Initialize();
-  
-    F_TMD = & F_TMD_simple;
-    NPar = 0;
-
-    //for (int i = 0; i < Npt; i++){
-    //  if (FlagQ[i])
-    //	cout << Variable[i][0] << " " << Variable[i][1] << " " << Variable[i][2] << " " << Variable[i][3] << endl;
-    //}
-
-    cout << Chi2(Parameters) / npt << endl;
+    TString filename = "temp.dat";
+    if (option == 0) filename = "results/fit_E288_simple_0.dat";
+    else if (option == 1) filename = "results/fit_E288_simple_1.dat";
+    else return 0;
+    FILE * fs = fopen(filename.Data(), "w");
     
+    fprintf(fs, "Q \t npt \t chi2 \t N \t alpha \t c \t dN \t dalpha \t dc\n");
+
+    double Q = 4.5;
+    int npt = 0;
+    double chi2 = 0;
+    
+    for (int j = 0; j < 10; j++){
+      Q = 4.5 + j;
+      SetFlagQ(Q, 1e-3);
+      SetFlagQT(112.0);
+      npt = CountPoints();
+      cout << "Npoints: " << npt << " " << Npt << endl;
+      
+      NPar = 3;     
+      if (option == 0) chi2 = Minimize(NPar, Parameters) / (npt - 2);
+      else if (option == 1) chi2 = Minimize(NPar, Parameters) / (npt - 3);
+      else break;
+ 
+      cout << Q << "  " << chi2 << "  " << Parameters[0] << " " << Parameters[1] << " " << Parameters[2] << endl;
+      fprintf(fs, "%.1f \t %d \t %.2f \t %.3E \t %.3E \t %.3E \t %.3E \t %.3E \t %.3E \n",
+	      Q, npt, chi2, Parameters[0], Parameters[1], Parameters[2], ParametersErrors[0], ParametersErrors[1], ParametersErrors[2]);
+    }
+    fclose(fs);
   }
 
+  if (task == 1){
+    
+    //LoadData_DY("path/Data/DY/DY.E288_200.list", "E288_200");
+    //LoadData_DY("path/Data/DY/DY.E288_300.list", "E288_300");
+    //LoadData_DY("path/Data/DY/DY.E288_400.list", "E288_400");
+    LoadData_DY("path/Data/DY/DY.E605.list", "E605");
+    //LoadData_DY("path/Data/DY/DY.E772.list", "E772");
+
+    TString filename = "temp.dat";
+    if (option == 0) filename = "results/fit_E605_simple_0.dat";
+    else if (option == 1) filename = "results/fit_E605_simple_1.dat";
+    else return 0;
+    FILE * fs = fopen(filename.Data(), "w");
+    
+    fprintf(fs, "Q \t npt \t chi2 \t N \t alpha \t c \t dN \t dalpha \t dc\n");
+
+    double Qlist[5] = {7.5, 8.5, 11.0, 12.5, 15.8};
+    double Q;
+    int npt = 0;
+    double chi2 = 0;
+    
+    for (int j = 0; j < 5; j++){
+      Q = Qlist[j];
+      SetFlagQ(Q, 1e-3);
+      SetFlagQT(112.0);
+      npt = CountPoints();
+      cout << "Npoints: " << npt << " " << Npt << endl;
+      
+      NPar = 3;     
+      if (option == 0) chi2 = Minimize(NPar, Parameters) / (npt - 2);
+      else if (option == 1) chi2 = Minimize(NPar, Parameters) / (npt - 3);
+      else break;
+ 
+      cout << Q << "  " << chi2 << "  " << Parameters[0] << " " << Parameters[1] << " " << Parameters[2] << endl;
+      fprintf(fs, "%.1f \t %d \t %.2f \t %.3E \t %.3E \t %.3E \t %.3E \t %.3E \t %.3E \n",
+	      Q, npt, chi2, Parameters[0], Parameters[1], Parameters[2], ParametersErrors[0], ParametersErrors[1], ParametersErrors[2]);
+    }
+    fclose(fs);
+  }
+
+  if (task == 2){
+    
+    //LoadData_DY("path/Data/DY/DY.E288_200.list", "E288_200");
+    //LoadData_DY("path/Data/DY/DY.E288_300.list", "E288_300");
+    //LoadData_DY("path/Data/DY/DY.E288_400.list", "E288_400");
+    //LoadData_DY("path/Data/DY/DY.E605.list", "E605");
+    LoadData_DY("path/Data/DY/DY.E772.list", "E772");
+
+    TString filename = "temp.dat";
+    if (option == 0) filename = "results/fit_E772_simple_0.dat";
+    else if (option == 1) filename = "results/fit_E772_simple_1.dat";
+    else return 0;
+    FILE * fs = fopen(filename.Data(), "w");
+    
+    fprintf(fs, "Q \t npt \t chi2 \t N \t alpha \t c \t dN \t dalpha \t dc\n");
+
+    double Qlist[8] = {5.5, 6.5, 7.5, 8.5, 11.5, 12.5, 13.5, 14.5};
+    double Q;
+    int npt = 0;
+    double chi2 = 0;
+    
+    for (int j = 0; j < 8; j++){
+      Q = Qlist[j];
+      SetFlagQ(Q, 1e-3);
+      SetFlagQT(112.0);
+      npt = CountPoints();
+      cout << "Npoints: " << npt << " " << Npt << endl;
+      
+      NPar = 3;     
+      if (option == 0) chi2 = Minimize(NPar, Parameters) / (npt - 2);
+      else if (option == 1) chi2 = Minimize(NPar, Parameters) / (npt - 3);
+      else break;
+ 
+      cout << Q << "  " << chi2 << "  " << Parameters[0] << " " << Parameters[1] << " " << Parameters[2] << endl;
+      fprintf(fs, "%.1f \t %d \t %.2f \t %.3E \t %.3E \t %.3E \t %.3E \t %.3E \t %.3E \n",
+	      Q, npt, chi2, Parameters[0], Parameters[1], Parameters[2], ParametersErrors[0], ParametersErrors[1], ParametersErrors[2]);
+    }
+    fclose(fs);
+  }
   
   return 0;
 }
