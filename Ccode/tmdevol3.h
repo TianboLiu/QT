@@ -123,7 +123,7 @@ namespace TMDEVOL{
   ROOT::Math::Interpolator S_inter(200, ROOT::Math::Interpolation::kCSPLINE);
 
   double S(const double b_T, const double Q){
-    return S_cal(b_T, Q);
+    //return S_cal(b_T, Q);
     if (b_T < 1e-3 || b_T > 1.5)
       return S_cal(b_T, Q);
     if (Q != S_Q){
@@ -211,6 +211,10 @@ namespace TMDEVOL{
   
   double (* F_NP)(const int flavor, const double x, const double b_T);
 
+  double F_NP_1(const int flavor, const double x, const double b_T){
+    return 1.0;
+  }
+
   double F_NP_gaus(const int flavor, const double x, const double b_T){
     return exp(-0.25 * 0.5 * b_T * b_T);
   }
@@ -222,13 +226,18 @@ namespace TMDEVOL{
     return value;
   }		      		    
 
+  double dF_TMD_$_db_T(const int flavor, const double x, const double b_T, const double Q){
+    double step = 1.0e-3;
+    return (F_TMD(flavor, x, b_T + step, Q) - F_TMD(flavor, x, b_T - step, Q)) / (2.0 * step);
+  }
+
   int Initialize(){
-    //order_C = 0;
+    order_C = 0;
     order_A = 2;
     order_B = 1;
     bstar = & bstar_bT;
     g_K = & g_K_zero;
-    F_NP = & F_NP_gaus;
+    F_NP = & F_NP_1;
     if (order_C == 0)
       xpdf = LHAPDF::mkPDF("CJ15lo", 0);
     else if (order_C == 1)
