@@ -101,7 +101,7 @@ double dsigma_DY(const double Q, const double QT, const double y, const double s
   //cout << Q << " " << QT << " " << y << " " << s << endl;
   ROOT::Math::GSLIntegrator ig(ROOT::Math::IntegrationOneDim::kADAPTIVE, 0.0, 1.0e-6);
   ig.SetFunction(&dsigma_DY_integrand, par);
-  double result = ig.Integral(0.0, M_PI_2 - 1e-12);
+  double result = ig.Integral(0.0, M_PI_2 - 1e-3);
   //double result = ig.Integral(1e-6, 70.0);
   return result;
 }
@@ -230,6 +230,9 @@ int main(const int argc, const char * argv[]){
       if (npt < 4) continue;
 
       NPar = 3;
+      Parameters[0] = 1.0;
+      Parameters[1] = 2.0;
+      Parameters[2] = 1.0;
       double chi2 = 0.0;
       if (option == 0) chi2 = Minimize(NPar, Parameters) / (npt - 2);
       else if (option == 1) chi2 = Minimize(NPar, Parameters) / (npt - 3);
