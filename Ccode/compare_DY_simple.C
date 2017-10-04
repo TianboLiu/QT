@@ -329,7 +329,7 @@ int main(const int argc, const char * argv[]){
     d0->SetBottomMargin(0.15);
     hB->SetTitle("E772");
     hB->GetXaxis()->SetLimits(0.0, 6.0);
-    hB->SetMaximum(10.0);
+    hB->SetMaximum(5.0);
     hB->DrawClone("");
     double Qlist772[8] = {5.5, 6.5, 7.5, 8.5, 11.5, 12.5, 13.5, 14.5};
     TLegend * leg772 = new TLegend(0.8, 0.2, 0.9, 0.9);
@@ -393,7 +393,7 @@ int main(const int argc, const char * argv[]){
     d0->SetBottomMargin(0.15);
     d0->SetLogy();
     hB->SetTitle("E288 (200 GeV)");
-    hB->GetXaxis()->SetLimits(0.0, 3.5);
+    hB->GetXaxis()->SetLimits(0.0, 5.0);
     hB->SetMinimum(1e-13);
     hB->SetMaximum(1e-7);
     hB->DrawClone("");
@@ -401,7 +401,7 @@ int main(const int argc, const char * argv[]){
     Npt = 0;
     LoadData_DY("path/Data/DY/DY.E288_200.list", "E288_200");
     double Qlist288[10] = {4.5, 5.5, 6.5, 7.5, 8.5, 9.5, 10.5, 11.5, 12.5, 13.5};
-    double QTlist288[10] = {1.9, 2.1, 2.3, 4.8, 4.8, 4.6, 1.9, 3.5, 2.9, 2.5};
+    double QTlist288[10] = {2.9, 4.6, 5.0, 4.8, 4.8, 4.6, 4.6, 3.5, 3.1, 2.5};
     dProtonA = 1.0;
     dProtonB = 78.0 / 195.0;
     for (int i = 0; i < 100; i++)
@@ -435,7 +435,7 @@ int main(const int argc, const char * argv[]){
       while (fs >> Q >> QT >> temp >> temp >> Parameters[0] >> Parameters[1] >> Parameters[2] >> temp >> temp >> temp){
 	if (Q == Qlist288[i] && QT == QTlist288[i]) break;
       }
-      if (Q == 9.5) continue;
+      //if (Q == 9.5) continue;
       for (int j = 0; j < 100; j++){
 	LY[j] = dsigma_DY(Q, LX[j], 0.40, pow(200.0 + Mp, 2) - pow(200.0, 2))
 	  * pow(Q, 2) * 2.0 * log((Q + 0.5) / (Q - 0.5)) / M_PI;
@@ -451,7 +451,7 @@ int main(const int argc, const char * argv[]){
     d0->SetBottomMargin(0.15);
     d0->SetLogy();
     hB->SetTitle("E288 (300 GeV)");
-    hB->GetXaxis()->SetLimits(0.0, 3.5);
+    hB->GetXaxis()->SetLimits(0.0, 5.0);
     hB->SetMinimum(1e-13);
     hB->SetMaximum(1e-7);
     hB->DrawClone("");
@@ -486,7 +486,7 @@ int main(const int argc, const char * argv[]){
       while (fs >> Q >> QT >> temp >> temp >> Parameters[0] >> Parameters[1] >> Parameters[2] >> temp >> temp >> temp){
 	if (Q == Qlist288[i] && QT == QTlist288[i]) break;
       }
-      if (Q == 9.5) continue;
+      //if (Q == 9.5) continue;
       for (int j = 0; j < 100; j++){
 	LY[j] = dsigma_DY(Q, LX[j], 0.21, pow(300.0 + Mp, 2) - pow(300.0, 2))
 	  * pow(Q, 2) * 2.0 * log((Q + 0.5) / (Q - 0.5)) / M_PI;
@@ -502,7 +502,7 @@ int main(const int argc, const char * argv[]){
     d0->SetBottomMargin(0.15);
     d0->SetLogy();
     hB->SetTitle("E288 (400 GeV)");
-    hB->GetXaxis()->SetLimits(0.0, 3.5);
+    hB->GetXaxis()->SetLimits(0.0, 5.0);
     hB->SetMinimum(1e-13);
     hB->SetMaximum(1e-7);
     hB->DrawClone("");
@@ -537,7 +537,7 @@ int main(const int argc, const char * argv[]){
       while (fs >> Q >> QT >> temp >> temp >> Parameters[0] >> Parameters[1] >> Parameters[2] >> temp >> temp >> temp){
 	if (Q == Qlist288[i] && QT == QTlist288[i]) break;
       }
-      if (Q == 9.5) continue;
+      //if (Q == 9.5) continue;
       for (int j = 0; j < 100; j++){
 	LY[j] = dsigma_DY(Q, LX[j], 0.03, pow(400.0 + Mp, 2) - pow(400.0, 2))
 	  * pow(Q, 2) * 2.0 * log((Q + 0.5) / (Q - 0.5)) / M_PI;
@@ -554,7 +554,7 @@ int main(const int argc, const char * argv[]){
     d0->SetBottomMargin(0.15);
     d0->SetLogy();
     hB->SetTitle("E605 (800 GeV)");
-    hB->GetXaxis()->SetLimits(0.0, 3.5);
+    hB->GetXaxis()->SetLimits(0.0, 5.0);
     hB->SetMinimum(1e-13);
     hB->SetMaximum(1e-7);
     hB->DrawClone("");
@@ -562,7 +562,7 @@ int main(const int argc, const char * argv[]){
     Npt = 0;
     LoadData_DY("path/Data/DY/DY.E605.list", "E605");
     double Qlist605[5] = {7.5, 8.5, 11.0, 12.5, 15.8};
-    double QTlist605[5] = {1.9, 2.3, 2.3, 2.3, 2.1};
+    double QTlist605[5] = {2.1, 2.7, 3.1, 3.5, 2.9};
 
     for (int i = 0; i < 5; i++){
       ndata = 0;
@@ -610,7 +610,7 @@ int main(const int argc, const char * argv[]){
     d0->SetBottomMargin(0.15);
     d0->SetLogy();
     hB->SetTitle("E772 (800 GeV)");
-    hB->GetXaxis()->SetLimits(0.0, 3.5);
+    hB->GetXaxis()->SetLimits(0.0, 5.0);
     hB->SetMinimum(1e-13);
     hB->SetMaximum(1e-7);
     hB->DrawClone("");
@@ -618,7 +618,7 @@ int main(const int argc, const char * argv[]){
     Npt = 0;
     LoadData_DY("path/Data/DY/DY.E772.list", "E772");
     double Qlist772[8] = {5.5, 6.5, 7.5, 8.5, 11.5, 12.5, 13.5, 14.5};
-    double QTlist772[8] = {2.9, 3.9, 3.4, 3.4, 2.7, 2.7, 1.7, 1.7};
+    double QTlist772[8] = {2.9, 3.9, 3.4, 3.4, 2.7, 2.7, 2.7, 1.7};
 
     for (int i = 0; i < 8; i++){
       ndata = 0;
@@ -642,7 +642,6 @@ int main(const int argc, const char * argv[]){
     }
 
     for (int i = 0; i < 8; i++){
-      continue;
       ifstream fs("results/QT_DY_E772_simple.txt");
       fs.getline(tmp, 300);
       while (fs >> Q >> QT >> temp >> temp >> Parameters[0] >> Parameters[1] >> Parameters[2] >> temp >> temp >> temp){
