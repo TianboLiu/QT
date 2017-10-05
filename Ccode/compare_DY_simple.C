@@ -401,7 +401,7 @@ int main(const int argc, const char * argv[]){
     Npt = 0;
     LoadData_DY("path/Data/DY/DY.E288_200.list", "E288_200");
     double Qlist288[10] = {4.5, 5.5, 6.5, 7.5, 8.5, 9.5, 10.5, 11.5, 12.5, 13.5};
-    double QTlist288[10] = {2.9, 4.6, 5.0, 4.8, 4.8, 4.6, 4.6, 3.5, 3.1, 2.5};
+    double QTlist288[10] = {2.1, 4.6, 5.0, 4.8, 4.8, 4.6, 4.6, 3.5, 3.1, 2.5};
     dProtonA = 1.0;
     dProtonB = 78.0 / 195.0;
     for (int i = 0; i < 100; i++)
@@ -618,7 +618,7 @@ int main(const int argc, const char * argv[]){
     Npt = 0;
     LoadData_DY("path/Data/DY/DY.E772.list", "E772");
     double Qlist772[8] = {5.5, 6.5, 7.5, 8.5, 11.5, 12.5, 13.5, 14.5};
-    double QTlist772[8] = {2.9, 3.9, 3.4, 3.4, 2.7, 2.7, 2.7, 1.7};
+    double QTlist772[8] = {2.9, 2.7, 3.4, 3.4, 2.7, 2.7, 2.7, 1.7};
 
     for (int i = 0; i < 8; i++){
       ndata = 0;
@@ -661,6 +661,308 @@ int main(const int argc, const char * argv[]){
     
     c0->Print("results/plot_DY_compare.pdf");
 
+  }
+
+  if (task == 3){//plot b*f(x,b,Q)
+    F_TMD = & F_TMD_simple;
+
+    TVirtualPad * d0;
+    TCanvas * c0 = new TCanvas("c0", "", 1600, 1800);
+    c0->Divide(2, 3);
+
+    TH1D * hB = new TH1D("hB", "", 1, 0.0, 10.0);
+    hB->SetStats(0);
+    hB->SetMinimum(0);
+    hB->SetMaximum(10.0);
+    hB->GetXaxis()->SetTitle("b (GeV^{-1})");
+    hB->GetXaxis()->CenterTitle(true);
+    hB->GetXaxis()->SetTitleSize(0.055);
+    hB->GetXaxis()->SetTitleOffset(1.15);
+    hB->GetXaxis()->SetLabelSize(0.055);
+    hB->GetYaxis()->SetTitle("bf(x,b,Q) (GeV^{-1})");
+    hB->GetYaxis()->CenterTitle(true);
+    hB->GetYaxis()->SetTitleSize(0.055);
+    hB->GetYaxis()->SetTitleOffset(1.15);
+    hB->GetYaxis()->SetLabelSize(0.055);
+
+    double LX[100], LYA[100], LYB[100];
+    double Q, QT, temp;
+    double xA, xB, xF, y, s;
+    char tmp[300];
+
+    for (int i = 0; i < 100; i++)
+      LX[i] = 0.05 * i + 1e-4;
+
+    TGraph * gA;
+    TGraph * gB;
+    TLegend * leg;
+    char ssQ[10], ssA[10], ssB[10];
+    TString text;
+  
+    int colorlist[10] = {1, 2, 4, 6, 3, 800, 7, 880, 900, 418};
+    //int stylelist[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    
+    d0 = c0->cd(1);
+    d0->SetLeftMargin(0.15);
+    d0->SetBottomMargin(0.15);
+    hB->SetTitle("E288");
+    hB->GetXaxis()->SetLimits(0.0, 8.0);
+    hB->SetMinimum(0.0);
+    hB->SetMaximum(7.0);
+    hB->DrawClone("");
+
+    leg = new TLegend(0.6, 0.2, 0.9, 0.9);
+    
+    double Qlist288[8] = {4.5, 5.5, 6.5, 7.5, 8.5, 11.5, 12.5, 13.5};
+    double QTlist288[8] = {2.1, 4.6, 5.0, 4.8, 4.8, 3.5, 3.1, 2.5};
+    s = pow(200.0 + Mp, 2) - pow(200.0, 2);
+    y = 0.40;
+
+    cout << "Plotting fit from E288 (200 GeV)" <<  endl;
+    for (int i = 0; i < 8; i++){
+      ifstream fs("results/QT_DY_E288_simple.txt");
+      fs.getline(tmp, 300);
+      while (fs >> Q >> QT >> temp >> temp >> Parameters[0] >> Parameters[1] >> Parameters[2] >> temp >> temp >> temp){
+	if (Q == Qlist288[i] && QT == QTlist288[i]) break;
+      }
+      if (Q > 11.0) continue;
+      xA = Q / sqrt(s) * exp(y);
+      xB = Q / sqrt(s) * exp(-y);
+      for (int j = 0; j < 100; j++){
+	LYA[j] = LX[j] * F_TMD(2, xA, LX[j], Q);
+	LYB[j] = LX[j] * F_TMD(2, xB, LX[j], Q);
+      }
+      gA = new TGraph(100, LX, LYA);
+      gA->SetLineColor(colorlist[i]);
+      gA->SetLineStyle(1);
+      gB = new TGraph(100, LX, LYB);
+      gB->SetLineColor(colorlist[i]);
+      gB->SetLineStyle(2);
+      gA->DrawClone("lsame");
+      gB->DrawClone("lsame");
+      sprintf(ssQ, "Q=%.1f,", Q);
+      sprintf(ssA, "xA=%.2f,", xA);
+      sprintf(ssB, "xB=%.2f", xB);
+      text = ssQ;
+      text.Append(ssA);
+      text.Append(ssB);
+      leg->AddEntry(gA, text, "l");
+      cout << Q << "  " << xA << "  " << xB << endl;
+    }
+    leg->Draw("same");
+
+    //
+    d0 = c0->cd(3);
+    d0->SetLeftMargin(0.15);
+    d0->SetBottomMargin(0.15);
+    hB->SetTitle("E288");
+    hB->GetXaxis()->SetLimits(0.0, 8.0);
+    hB->SetMinimum(0.0);
+    hB->SetMaximum(7.0);
+    hB->DrawClone("");
+
+    leg = new TLegend(0.6, 0.2, 0.9, 0.9);
+    
+    s = pow(300.0 + Mp, 2) - pow(300.0, 2);
+    y = 0.21;
+
+    cout << "Plotting fit from E288 (300 GeV)" <<  endl;
+    for (int i = 0; i < 8; i++){
+      ifstream fs("results/QT_DY_E288_simple.txt");
+      fs.getline(tmp, 300);
+      while (fs >> Q >> QT >> temp >> temp >> Parameters[0] >> Parameters[1] >> Parameters[2] >> temp >> temp >> temp){
+	if (Q == Qlist288[i] && QT == QTlist288[i]) break;
+      }
+      if (Q > 12.0) continue;
+      xA = Q / sqrt(s) * exp(y);
+      xB = Q / sqrt(s) * exp(-y);
+      for (int j = 0; j < 100; j++){
+	LYA[j] = LX[j] * F_TMD(2, xA, LX[j], Q);
+	LYB[j] = LX[j] * F_TMD(2, xB, LX[j], Q);
+      }
+      gA = new TGraph(100, LX, LYA);
+      gA->SetLineColor(colorlist[i]);
+      gA->SetLineStyle(1);
+      gB = new TGraph(100, LX, LYB);
+      gB->SetLineColor(colorlist[i]);
+      gB->SetLineStyle(2);
+      gA->DrawClone("lsame");
+      gB->DrawClone("lsame");
+      sprintf(ssQ, "Q=%.1f,", Q);
+      sprintf(ssA, "xA=%.2f,", xA);
+      sprintf(ssB, "xB=%.2f", xB);
+      text = ssQ;
+      text.Append(ssA);
+      text.Append(ssB);
+      leg->AddEntry(gA, text, "l");
+      cout << Q << "  " << xA << "  " << xB << endl;
+    }
+    leg->Draw("same");
+
+    //
+    d0 = c0->cd(5);
+    d0->SetLeftMargin(0.15);
+    d0->SetBottomMargin(0.15);
+    hB->SetTitle("E288");
+    hB->GetXaxis()->SetLimits(0.0, 8.0);
+    hB->SetMinimum(0.0);
+    hB->SetMaximum(5.0);
+    hB->DrawClone("");
+
+    leg = new TLegend(0.6, 0.2, 0.9, 0.9);
+    
+    s = pow(400.0 + Mp, 2) - pow(400.0, 2);
+    y = 0.03;
+
+    cout << "Plotting fit from E288 (400 GeV)" <<  endl;
+    for (int i = 0; i < 8; i++){
+      ifstream fs("results/QT_DY_E288_simple.txt");
+      fs.getline(tmp, 300);
+      while (fs >> Q >> QT >> temp >> temp >> Parameters[0] >> Parameters[1] >> Parameters[2] >> temp >> temp >> temp){
+	if (Q == Qlist288[i] && QT == QTlist288[i]) break;
+      }
+      if (Q < 5.0) continue;
+      xA = Q / sqrt(s) * exp(y);
+      xB = Q / sqrt(s) * exp(-y);
+      for (int j = 0; j < 100; j++){
+	LYA[j] = LX[j] * F_TMD(2, xA, LX[j], Q);
+	LYB[j] = LX[j] * F_TMD(2, xB, LX[j], Q);
+      }
+      gA = new TGraph(100, LX, LYA);
+      gA->SetLineColor(colorlist[i]);
+      gA->SetLineStyle(1);
+      gB = new TGraph(100, LX, LYB);
+      gB->SetLineColor(colorlist[i]);
+      gB->SetLineStyle(2);
+      gA->DrawClone("lsame");
+      gB->DrawClone("lsame");
+      sprintf(ssQ, "Q=%.1f,", Q);
+      sprintf(ssA, "xA=%.2f,", xA);
+      sprintf(ssB, "xB=%.2f", xB);
+      text = ssQ;
+      text.Append(ssA);
+      text.Append(ssB);
+      leg->AddEntry(gA, text, "l");
+      cout << Q << "  " << xA << "  " << xB << endl;
+    }
+    leg->Draw("same");
+
+
+    //
+    d0 = c0->cd(2);
+    d0->SetLeftMargin(0.15);
+    d0->SetBottomMargin(0.15);
+    hB->SetTitle("E605");
+    hB->GetXaxis()->SetLimits(0.0, 8.0);
+    hB->SetMinimum(0.0);
+    hB->SetMaximum(2.5);
+    hB->DrawClone("");
+
+    leg = new TLegend(0.6, 0.2, 0.9, 0.9);
+
+    double Qlist605[5] = {7.5, 8.5, 11.0, 12.5, 15.8};
+    double QTlist605[5] = {2.1, 2.7, 3.1, 3.5, 2.9};
+    s = pow(800.0 + Mp, 2) - pow(800.0, 2);
+    xF = 0.1;
+
+    cout << "Plotting fit from E605 (800 GeV)" <<  endl;
+    for (int i = 0; i < 5; i++){
+      ifstream fs("results/QT_DY_E605_simple.txt");
+      fs.getline(tmp, 300);
+      while (fs >> Q >> QT >> temp >> temp >> Parameters[0] >> Parameters[1] >> Parameters[2] >> temp >> temp >> temp){
+	if (Q == Qlist605[i] && QT == QTlist605[i]) break;
+      }
+      xA = sqrt(xF * xF + 4.0 * Q * Q / s) + xF;
+      xB = sqrt(xF * xF + 4.0 * Q * Q / s) - xF;
+      for (int j = 0; j < 100; j++){
+	LYA[j] = LX[j] * F_TMD(2, xA, LX[j], Q);
+	LYB[j] = LX[j] * F_TMD(2, xB, LX[j], Q);
+      }
+      gA = new TGraph(100, LX, LYA);
+      gA->SetLineColor(colorlist[i]);
+      gA->SetLineStyle(1);
+      gB = new TGraph(100, LX, LYB);
+      gB->SetLineColor(colorlist[i]);
+      gB->SetLineStyle(2);
+      gA->DrawClone("lsame");
+      gB->DrawClone("lsame");
+      sprintf(ssQ, "Q=%.1f,", Q);
+      sprintf(ssA, "xA=%.2f,", xA);
+      sprintf(ssB, "xB=%.2f", xB);
+      text = ssQ;
+      text.Append(ssA);
+      text.Append(ssB);
+      leg->AddEntry(gA, text, "l");
+      cout << Q << "  " << xA << "  " << xB << endl;
+    }
+    leg->Draw("same");
+
+    //
+    d0 = c0->cd(4);
+    d0->SetLeftMargin(0.15);
+    d0->SetBottomMargin(0.15);
+    hB->SetTitle("E772");
+    hB->GetXaxis()->SetLimits(0.0, 8.0);
+    hB->SetMinimum(0.0);
+    hB->SetMaximum(7.0);
+    hB->DrawClone("");
+
+    leg = new TLegend(0.6, 0.2, 0.9, 0.9);
+
+    double Qlist772[8] = {5.5, 6.5, 7.5, 8.5, 11.5, 12.5, 13.5, 14.5};
+    double QTlist772[8] = {2.9, 2.7, 3.4, 3.4, 2.7, 2.7, 2.7, 1.7};
+    
+    s = pow(800.0 + Mp, 2) - pow(800.0, 2);
+    xF = 0.2;
+
+    cout << "Plotting fit from E772 (800 GeV)" <<  endl;
+    for (int i = 0; i < 5; i++){
+      ifstream fs("results/QT_DY_E772_simple.txt");
+      fs.getline(tmp, 300);
+      while (fs >> Q >> QT >> temp >> temp >> Parameters[0] >> Parameters[1] >> Parameters[2] >> temp >> temp >> temp){
+	if (Q == Qlist772[i] && QT == QTlist772[i]) break;
+      }
+      if (Q > 13.0) continue;
+      xA = sqrt(xF * xF + 4.0 * Q * Q / s) + xF;
+      xB = sqrt(xF * xF + 4.0 * Q * Q / s) - xF;
+      for (int j = 0; j < 100; j++){
+	LYA[j] = LX[j] * F_TMD(2, xA, LX[j], Q);
+	LYB[j] = LX[j] * F_TMD(2, xB, LX[j], Q);
+      }
+      gA = new TGraph(100, LX, LYA);
+      gA->SetLineColor(colorlist[i]);
+      gA->SetLineStyle(1);
+      gB = new TGraph(100, LX, LYB);
+      gB->SetLineColor(colorlist[i]);
+      gB->SetLineStyle(2);
+      gA->DrawClone("lsame");
+      gB->DrawClone("lsame");
+      sprintf(ssQ, "Q=%.1f,", Q);
+      sprintf(ssA, "xA=%.2f,", xA);
+      sprintf(ssB, "xB=%.2f", xB);
+      text = ssQ;
+      text.Append(ssA);
+      text.Append(ssB);
+      leg->AddEntry(gA, text, "l");
+      cout << Q << "  " << xA << "  " << xB << endl;
+    }
+    leg->Draw("same");
+    
+    c0->Print("results/plot_DY_bf(x,b).pdf");
+  }
+
+
+  if (task == 4){//evolution compare
+    TMDEVOL::Initialize();
+
+    double b1 = 0.5;
+    double b2 = 0.8;
+
+
+
+
+
+    
   }
   
 
