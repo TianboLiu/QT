@@ -47,7 +47,7 @@ int main(const int argc, const char * argv[]){
     TMDEVOL::Initialize();
     F_TMD = & F_TMD_evol;
 
-    double bT = 0.8;
+    double bT = 1.5;
 
     TVirtualPad * d0;
     TCanvas * c0 = new TCanvas("c0", "", 1600, 1800);
@@ -438,7 +438,7 @@ int main(const int argc, const char * argv[]){
     TMDEVOL::Initialize();
     F_TMD = & F_TMD_evol;
 
-    double bT = 0.8;
+    double bT = 1.5;
 
     TVirtualPad * d0;
     TCanvas * c0 = new TCanvas("c0", "", 1600, 1800);

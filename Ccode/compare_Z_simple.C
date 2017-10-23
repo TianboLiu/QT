@@ -444,6 +444,61 @@ int main(const int argc, const char * argv[]){
     
     c0->Print("results/plot_Z_compare.pdf");
   }
+
+  if (task == 3){//plot b*f(x,b,Q)
+    F_TMD = & F_TMD_simple;
+
+    TVirtualPad * d0;
+    TCanvas * c0 = new TCanvas("c0", "", 1600, 1800);
+    c0->Divide(2,3);
+
+    TH1D * hB = new TH1D("hB", "", 1, 0.0, 10.0);
+    hB->SetStats(0);
+    hB->SetMinimum(0);
+    hB->SetMaximum(10.0);
+    hB->GetXaxis()->SetTitle("b (GeV^{-1})");
+    hB->GetXaxis()->CenterTitle(true);
+    hB->GetXaxis()->SetTitleSize(0.055);
+    hB->GetXaxis()->SetTitleOffset(1.15);
+    hB->GetXaxis()->SetLabelSize(0.055);
+    hB->GetYaxis()->SetTitle("bf(x,b,Q) (GeV^{-1})");
+    hB->GetYaxis()->CenterTitle(true);
+    hB->GetYaxis()->SetTitleSize(0.055);
+    hB->GetYaxis()->SetTitleOffset(1.15);
+    hB->GetYaxis()->SetLabelSize(0.055);
+
+    double LX[100], LY[100];
+    for (int i = 0; i < 100; i++)
+      LX[i] = i * 0.1;
+
+    TGraph * g0;
+    double Q = 91.1872;
+    int flavor = 2;
+
+    double x = 0.05;
+    d0 = c0->cd(1);
+    d0->SetLeftMargin(0.15);
+    d0->SetBottomMargin(0.15);
+    hB->GetXaxis()->SetLimits(0.0, 8.0);
+    hB->SetMinimum(0.0);
+    hB->SetMaximum(5.0);
+    hB->DrawClone("");
+
+    Parameters[0] = 2.25;
+    Parameters[1] = 8.94E-01;
+    Parameters[2] = 2.14;
+    
+    for (int i = 0; i < 100; i++){
+      LY[i] = LX[i] * F_TMD(flavor, x, LX[i], Q);
+    }
+
+    g0 = new TGraph(100, LX, LY);
+    g0->SetLineColor(1);
+
+    g0->DrawClone("lsame");
+
+    c0->Print("results/plot_Z_bf(x,b).pdf");
+  }
     
 
   return 0;
