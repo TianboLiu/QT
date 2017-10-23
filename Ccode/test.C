@@ -1,12 +1,10 @@
 #include "Lcore.h"
-#include "tmdevol.h"
+#include "tmdevol3.h"
 
 int main(const int argc, const char * argv[]){
 
-  double result = Test();
-
-  cout << result << endl;
-
+  TMDEVOL::xpdf = LHAPDF::mkPDF("CJ15lo", 0);
+  cout << TMDEVOL::xpdf->quarkThreshold(4) << endl;
 
   return 0;
 }
