@@ -18,6 +18,8 @@ namespace TMDEVOL{
 
   LHAPDF::PDF * xpdf;
 
+  const LHAPDF::PDF * _xpdf = LHAPDF::mkPDF("CJ15nlo", 0);
+
   const double gammaE = TMath::EulerGamma();//Euler 
   const double Pi = TMath::Pi();//pi
 
@@ -31,6 +33,34 @@ namespace TMDEVOL{
   
   double C1 = 2.0 * exp(-gammaE);
 
+  double N_f(const double mu){
+    double value = 3.0;
+    if (mu > 1.3) value = 4.0;
+    if (mu > 4.2) value = 5.0;
+    if (mu > 173.0) value = 6.0;
+    return value;
+  }
+
+  double beta_0(const double nf){
+    return 11.0 - 2.0 / 3.0 * nf;
+  }
+
+  double beta_1(const double nf){
+    return 102.0 - 38.0 / 3.0 * nf;
+  }
+
+  double alpha_S(const double mu){
+    return _xpdf->alphasQ(mu);
+    double nf = N_f(mu);
+    double b0 = beta_0(nf);
+    double b1 = beta_1(nf);
+    double L = 0.226;
+    if (mu < 4.2) L = 0.323;
+    if (mu < 1.3) L = 0.370;
+    double t = pow(mu/L, 2);
+    return 4.0 * Pi / (b0 * log(t)) * (1.0 - b1 * log(log(t)) / (pow(b0, 2) * log(t))) ;
+  }
+  
   double (* bstar)(const double b_T);
 
   double bstar_CS(const double b_T){//Collins and Soper, NPB 197 (1982) 446
@@ -51,24 +81,16 @@ namespace TMDEVOL{
   double mu_b(const double b_T){
     return C1 / bstar(b_T);
   }
-
-  double N_f(const double mu){
-    double value = 3.0;
-    if (mu > 1.3) value = 4.0;
-    if (mu > 4.5) value = 5.0;
-    if (mu > 172.0) value = 6.0;
-    return value;
-  }
   
   double Afactor(const double mu){
     double value = 0;
     // order 0
     if (order_A < 1) return value;
     // order 1
-    value += (xpdf->alphasQ(mu) / Pi) * C_F;
+    value += (alpha_S(mu) / Pi) * C_F;
     if (order_A < 2) return value;
     // order 2
-    value += pow(xpdf->alphasQ(mu) / Pi, 2) * C_F / 2.0 * (C_A * (67.0 / 18.0 - Pi * Pi / 6.0) - 10.0 / 9.0 * T_R * N_f(mu));
+    value += pow(alpha_S(mu) / Pi, 2) * C_F / 2.0 * (C_A * (67.0 / 18.0 - Pi * Pi / 6.0) - 10.0 / 9.0 * T_R * N_f(mu));
     if (order_A < 3) return value;
     return value;
   }
@@ -78,19 +100,23 @@ namespace TMDEVOL{
     //order 0
     if (order_B < 1) return value;
     //order 1
-    value += (xpdf->alphasQ(mu) / Pi) * (-3.0 * C_F / 2.0);
+    value += (alpha_S(mu) / Pi) * (-3.0 * C_F / 2.0);
     if (order_B < 2) return value;
     //order 2
     double zeta3 = 1.202;//riemann_zeta(3.0)
-    value += pow(xpdf->alphasQ(mu) / Pi, 2) * (pow(C_F / 2.0, 2) * (Pi * Pi - 3.0 / 4.0 - 12.0 * zeta3) + C_F / 2.0 * C_A * (11.0 / 18.0 * Pi * Pi - 193.0 / 24.0 + 3.0 * zeta3) + C_F / 2.0 * T_R * N_f(mu) * (17.0 / 6.0 - 2.0 / 9.0 * Pi * Pi));
+    value += pow(alpha_S(mu) / Pi, 2) * (pow(C_F / 2.0, 2) * (Pi * Pi - 3.0 / 4.0 - 12.0 * zeta3) + C_F / 2.0 * C_A * (11.0 / 18.0 * Pi * Pi - 193.0 / 24.0 + 3.0 * zeta3) + C_F / 2.0 * T_R * N_f(mu) * (17.0 / 6.0 - 2.0 / 9.0 * Pi * Pi));
     if (order_B < 3) return value;
     return value;
+  }
+
+  double Addfactor(const double mu){
+    return 0.0 * mu;
   }
 
   double S_integrand(const double logmu, void * par){
     double Q = ((double *) par)[0];
     double mu = exp(logmu);
-    double result = 2.0 * log(Q / mu) * Afactor(mu) + Bfactor(mu);
+    double result = 2.0 * log(Q / mu) * Afactor(mu) + Bfactor(mu) + Addfactor(mu);
     return result;
   }
 
@@ -123,7 +149,7 @@ namespace TMDEVOL{
   ROOT::Math::Interpolator S_inter(200, ROOT::Math::Interpolation::kCSPLINE);
 
   double S(const double b_T, const double Q){
-    //return S_cal(b_T, Q);
+    return S_cal(b_T, Q);
     if (b_T < 1e-3 || b_T > 1.5)
       return S_cal(b_T, Q);
     if (Q != S_Q){
@@ -147,7 +173,7 @@ namespace TMDEVOL{
     if (order_C < 1) return value;
     //order 1
     if (i == j && i != 21){
-      value += (xpdf->alphasQ(mu) / Pi) * C_F / 2.0 * (Pi * Pi / 2.0 - 4.0);
+      value += (alpha_S(mu) / Pi) * C_F / 2.0 * (Pi * Pi / 2.0 - 4.0);
     }
     if (order_C < 2) return value;
     return value;
@@ -160,10 +186,10 @@ namespace TMDEVOL{
     if (order_C < 1) return value;
     //order 1
     if (i == j && j != 21){
-      value += (xpdf->alphasQ(mu) / Pi) * C_F / 2.0 * (1.0 - z);
+      value += (alpha_S(mu) / Pi) * C_F / 2.0 * (1.0 - z);
     }
     if (i != 21 && j == 21){
-      value += (xpdf->alphasQ(mu) / Pi) * T_R * z * (1.0 - z);
+      value += (alpha_S(mu) / Pi) * T_R * z * (1.0 - z);
     }
     if (order_C < 2) return value;
     return value;
