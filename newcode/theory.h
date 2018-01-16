@@ -8,6 +8,13 @@
 #include "LHAPDF/LHAPDF.h"
 
 #include "Math/GSLIntegrator.h"
+#include "Math/Integrator.h"
+#include "Math/IntegratorMultiDim.h"
+#include "Math/Functor.h"
+#include "Math/Factory.h"
+#include "Math/WrappedTF1.h"
+#include "Math/WrappedParamFunction.h"
+#include "TF1.h"
 #include "gsl/gsl_sf_bessel.h"
 
 using namespace std;
@@ -50,9 +57,8 @@ int GetTMDs(double * tmds, const double dProton, const double x, const double b_
   return 0;
 }
 
-double dsigma_DY_integrand(const double atb, void * par){
-  double b_T = tan(atb);
-  double * para = (double *) par;
+double dsigma_DY_integrand(const double * atb, const double * para){
+  double b_T = tan(atb[0]);
   double Q = para[0];
   double QT = para[1];
   double y = para[2];
@@ -76,15 +82,93 @@ double dsigma_DY_integrand(const double atb, void * par){
 		   + tmdA[3] * tmdB[3+6] + tmdA[3+6] * tmdB[3]
 		   + tmdA[5] * tmdB[5+6] + tmdA[5+6] * tmdB[5]);
   double result = b_T * J0(b_T * QT) * sigma0 * convol / (2.0 * M_PI);
-  return result / pow(cos(atb), 2);
+  return result / pow(cos(atb[0]), 2);
 }
 
 double dsigma_DY(double * par){
   //par: Q, QT, y, s, dPA, dPB
-  ROOT::Math::GSLIntegrator ig(ROOT::Math::IntegrationOneDim::kADAPTIVE, 0.0, 1e-6);
-  ig.SetFunction(&dsigma_DY_integrand, par);
-  double result = ig.Integral(0.0, M_PI_2 - 0.1) + ig.Integral(M_PI_2 - 0.1, M_PI_2 - 0.01) + ig.Integral(M_PI_2 - 0.01, M_PI_2 - 1e-9);
+  TF1 f("integrand", &dsigma_DY_integrand, 0.0, M_PI_2, 6);
+  ROOT::Math::WrappedTF1 wf(f);
+  wf.SetParameters(par);
+  ROOT::Math::IntegratorOneDim ig(ROOT::Math::IntegrationOneDim::kADAPTIVE, 0.0, 1e-4);
+  ig.SetFunction(wf);
+  double result = ig.Integral(0.0, M_PI_2 - 0.1) + ig.Integral(M_PI_2 - 0.1, M_PI_2 - 0.01);
   return result;
+}
+
+double dsigma_Z_integrand(const double * atb, const double * para){
+  double b_T = tan(atb[0]);
+  double Q = para[0];
+  double QT = para[1];
+  double y = para[2];
+  double s = para[3];
+  double dProtonA = para[4];
+  double dProtonB = para[5];
+  double xA = Q / sqrt(s) * exp(y);
+  double xB = Q / sqrt(s) * exp(-y);
+  double alpha_EM_Z = 1.0 / 128.0;
+  double MZ = 91.2;
+  double GammaZ = 2.5;
+  double sw2 = 0.2313;
+  double cw2 = 0.7687;
+  double cu2 = pow(Q, 4) / (pow(Q * Q - MZ * MZ, 2) + pow(GammaZ * MZ, 2)) * (1.0 - 4.0 * sw2 + 8.0 * pow(sw2, 2)) / (8.0 * sw2 * cw2) * (1.0 - 4.0 * 2.0 / 3.0 * sw2 + 8.0 * pow(2.0 / 3.0, 2) * pow(sw2, 2)) / (8.0 * sw2 * cw2);
+  double cd2 = pow(Q, 4) / (pow(Q * Q - MZ * MZ, 2) + pow(GammaZ * MZ, 2)) * (1.0 - 4.0 * sw2 + 8.0 * pow(sw2, 2)) / (8.0 * sw2 * cw2) * (1.0 - 4.0 * 1.0 / 3.0 * sw2 + 8.0 * pow(1.0 / 3.0, 2) * pow(sw2, 2)) / (8.0 * sw2 * cw2);
+  double sigma0 = 4.0 * pow(M_PI, 2) * pow(alpha_EM_Z, 2) / (9.0 * s * pow(Q, 2));
+  double tmdA[13], tmdB[13];
+  GetTMDs(tmdA, dProtonA, xA, b_T, Q);
+  GetTMDs(tmdB, dProtonB, xB, b_T, Q);
+  double convol =
+    cu2 * (tmdA[2] * tmdB[2+6] + tmdA[2+6] * tmdB[2]
+		   + tmdA[4] * tmdB[4+6] + tmdA[4+6] * tmdB[4])
+    +
+    cd2 * (tmdA[1] * tmdB[1+6] + tmdA[1+6] * tmdB[1]
+		   + tmdA[3] * tmdB[3+6] + tmdA[3+6] * tmdB[3]
+		   + tmdA[5] * tmdB[5+6] + tmdA[5+6] * tmdB[5]);
+  double result = b_T * J0(b_T * QT) * sigma0 * convol / (2.0 * M_PI);
+  return result / pow(cos(atb[0]), 2);
+}
+
+double dsigma_Z(double * par){
+  //par: Q, QT, y, s, dPA, dPB
+  TF1 f("integrand", &dsigma_Z_integrand, 0.0, M_PI_2, 6);
+  ROOT::Math::WrappedTF1 wf(f);
+  wf.SetParameters(par);
+  ROOT::Math::IntegratorOneDim ig(ROOT::Math::IntegrationOneDim::kADAPTIVE, 0.0, 1e-4);
+  ig.SetFunction(wf);
+  double result = ig.Integral(0.0, M_PI_2 - 0.1) + ig.Integral(M_PI_2 - 0.1, M_PI_2 - 0.01);
+  return result;
+}
+
+double dsigma_gZ_integrand(const double * atb, const double * para){
+  double b_T = tan(atb[0]);
+  double Q = para[0];
+  double QT = para[1];
+  double y = para[2];
+  double s = para[3];
+  double dProtonA = para[4];
+  double dProtonB = para[5];
+  double xA = Q / sqrt(s) * exp(y);
+  double xB = Q / sqrt(s) * exp(-y);
+  double alpha_EM_Z = 1.0 / 128.0;
+  double MZ = 91.2;
+  double GammaZ = 2.5;
+  double sw2 = 0.2313;
+  double cw2 = 0.7687;
+  double cu2 = 2.0 * pow(Q, 2) * (Q * Q - MZ * MZ) / (pow(Q * Q - MZ * MZ, 2) + pow(GammaZ * MZ, 2)) * (1.0 - 4.0 * sw2) / (4.0 * sqrt(sw2 * cw2)) * 2.0 / 3.0 * (1.0 - 4.0 * 2.0 / 3.0 * sw2) / (4.0 * sqrt(sw2 * cw2));
+  double cd2 = 2.0 * pow(Q, 2) * (Q * Q - MZ * MZ) / (pow(Q * Q - MZ * MZ, 2) + pow(GammaZ * MZ, 2)) * (1.0 - 4.0 * sw2) / (4.0 * sqrt(sw2 * cw2)) * 1.0 / 3.0 * (1.0 - 4.0 * 1.0 / 3.0 * sw2) / (4.0 * sqrt(sw2 * cw2));
+  double sigma0 = 4.0 * pow(M_PI, 2) * pow(alpha_EM_Z, 2) / (9.0 * s * pow(Q, 2));
+  double tmdA[13], tmdB[13];
+  GetTMDs(tmdA, dProtonA, xA, b_T, Q);
+  GetTMDs(tmdB, dProtonB, xB, b_T, Q);
+  double convol =
+    cu2 * (tmdA[2] * tmdB[2+6] + tmdA[2+6] * tmdB[2]
+		   + tmdA[4] * tmdB[4+6] + tmdA[4+6] * tmdB[4])
+    +
+    cd2 * (tmdA[1] * tmdB[1+6] + tmdA[1+6] * tmdB[1]
+		   + tmdA[3] * tmdB[3+6] + tmdA[3+6] * tmdB[3]
+		   + tmdA[5] * tmdB[5+6] + tmdA[5+6] * tmdB[5]);
+  double result = b_T * J0(b_T * QT) * sigma0 * convol / (2.0 * M_PI);
+  return result / pow(cos(atb[0]), 2);
 }
   
 
