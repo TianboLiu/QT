@@ -6,37 +6,33 @@
 #include "TString.h"
 #include "TMatrixDEigen.h"
 
-double Q[200], QT[200], ds[200], Estat[200], Esyst[200];
-double s = pow(38.8, 2);
-double xF = 0.1;
+double QT[200], ds[200], Estat[200], Esyst[200];
+double s = pow(1960.0, 2);
 double dPA = 1.0;//proton
-double dPB = 29.0 / 64.0;//Pt
-int Npoints = 0;
-double unit = pow(1.0e13 / 0.197327, 2);
+double dPB = -1.0;//antiproton
+double unit = 255.8 * 1e-10 / pow(0.197327, 2);
 double pars[7][3];
-double Qvalue = 0;
+int Npoints = 0;
 
-int LoadData(const double Qvalue, const double QTmax, const char * file){
+int LoadData(const double QTmax, const char * file){
   FILE * fs = fopen("data_in.dat", "w");
   ifstream infile(file);
   char ltmp[300];
   int flag = 0;
-  for (int i = 0; i < 15; i++)//skiprows
+  for (int i = 0; i < 20; i++)//skiprows
     infile.getline(ltmp, 300);
   int Npt = 0;
-  while (infile >> Q[Npt] >> QT[Npt] >> ds[Npt] >> Estat[Npt]){
-    if (abs(Q[Npt] - Qvalue) > 0.1) continue;
-    Esyst[Npt] = ds[Npt] * 0.15;
-    if (QT[Npt] < QTmax) {
+  while (infile >> QT[Npt] >> ds[Npt] >> Estat[Npt] >> Esyst[Npt]){
+    if (QT[Npt] < QTmax){
       flag = 1;
       fprintf(fs, "%.4E\t%.4E\t%.4E\t%.4E\t%d\n",
-	      QT[Npt], ds[Npt] * unit, Estat[Npt] * unit, Esyst[Npt] * unit, flag);
+	      QT[Npt], ds[Npt] * unit, Estat[Npt] * unit, 0.0, flag);
       Npt++;
     }
     else {
       flag = 0;
       fprintf(fs, "%.4E\t%.4E\t%.4E\t%.4E\t%d\n",
-	      QT[Npt], ds[Npt] * unit, Estat[Npt] * unit, Esyst[Npt] * unit, flag);
+	      QT[Npt], ds[Npt] * unit, Estat[Npt] * unit, 0.0, flag);
     }
   }
   infile.close();
@@ -79,48 +75,62 @@ int GetParameters(const char * file){
   return 0;
 }
 
+double Integrand(const double * var, const double * par){
+  double Q = var[0];
+  double y = var[1];
+  double QT = par[0];
+  double para[6] = {Q, QT, y, s, dPA, dPB};
+  double xs = dsigma_Z(para) + dsigma_gZ(para);
+  return 2.0 * Q * 2.0 * QT * xs;
+}
+
+double Theory(const double QT){
+  double xl[2] = {66.0, -3.39};
+  double xu[2] = {116.0, 3.39};
+  ROOT::Math::WrappedParamFunction<> wf(&Integrand, 2, 1);
+  wf.SetParameters(&QT);
+  ROOT::Math::IntegratorMultiDim ig(ROOT::Math::IntegrationMultiDim::kADAPTIVE, 0.0, 1e-5, 50000);
+  ig.SetFunction(wf);
+  double result = ig.Integral(xl, xu);
+  return result;
+}
+  
 int Curve(){
   FILE * fc = fopen("fc.dat", "w");
   double theory[7];
   double error;
-  double var[6] = {Qvalue, 0.0, asinh(sqrt(s) / Qvalue * xF / 2.0), s, dPA, dPB};
+  double QT;
   for (int ix = 0; ix < 50; ix++){
-    var[1] = 0.05 + 0.1 * ix;
+    QT = 0.05 + 0.5 * ix;
     for (int i = 0; i < 7; i++){
       for (int j = 0; j < 3; j++)
 	Parameters[j] = pars[i][j];
-      theory[i] = dsigma_DY(var) * pow(Qvalue, 2) * 2.0 * log((Qvalue + 0.5) / (Qvalue - 0.5)) / M_PI;
-      if (Qvalue > 11.5 && Qvalue < 13.5)
-	theory[i] = theory[i] / log((Q[i] + 0.5) / (Q[i] - 0.5)) * log((Q[i] + 1.0) / (Q[i] - 1.0));
-      if (Qvalue > 13.5)
-	theory[i] = theory[i] / log((Q[i] + 0.5) / (Q[i] - 0.5)) * log((Q[i] + 2.25) / (Q[i] - 2.25));
+      theory[i] = Theory(QT);
     }
     error = sqrt(pow(theory[1] - theory[2], 2) + pow(theory[3] - theory[4], 2) + pow(theory[5] - theory[6], 2)) / 2.0;
     fprintf(fc, "%.3E\t%.3E\t%.3E\t%.3E\t%.3E\t%.3E\t%.3E\t%.3E\t%.3E\n",
-	    var[1], theory[0], error, theory[1], theory[2], theory[3], theory[4], theory[5], theory[6]);
+	    QT, theory[0], error, theory[1], theory[2], theory[3], theory[4], theory[5], theory[6]);
   }
   fclose(fc);
   return 0;
 }
 
-
 int main(const int argc, const char * argv[]){
 
-  if (argc < 4){
-    cout << "./compare_E605 <Q> <QT> <fitfile>" << endl;
+  if (argc < 3){
+    cout << "./fit_D0II <QT> <fitfile>" << endl;
     return 0;
   }
 
-  TString filename = "path/DY/DY.E605.list";
+  TString filename = "path/DY/DY.D0_RunII.list";
 
   F_TMD = & F_TMD_simple;
 
-  Qvalue = atof(argv[1]);
-  double QTmax = atof(argv[2]);
+  double QTmax = atof(argv[1]);
 
-  LoadData(Qvalue, QTmax, filename.Data());
-  
-  GetParameters(argv[3]);
+  LoadData(QTmax, filename.Data());
+    
+  GetParameters(argv[2]);
   Curve();
   
   return 0;

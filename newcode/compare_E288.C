@@ -95,6 +95,7 @@ int Curve(){
     fprintf(fc, "%.3E\t%.3E\t%.3E\t%.3E\t%.3E\t%.3E\t%.3E\t%.3E\t%.3E\n",
 	    var[1], theory[0], error, theory[1], theory[2], theory[3], theory[4], theory[5], theory[6]);
   }
+  fclose(fc);
   return 0;
 }
 
