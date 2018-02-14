@@ -7,12 +7,12 @@
 #include "TMatrixDEigen.h"
 
 double Q[200], QT[200], ds[200], Estat[200], Esyst[200];
-double s = 0;
-double y = 0;
+double s = pow(38.8, 2);
+double xF = 0.2;
 double dPA = 1.0;//proton
-double dPB = 78.0 / 195.0;//Pt
+double dPB = 1.0 / 2.0;//d
 int Npoints = 0;
-double unit = pow(1.0e13 / 0.197327, 2);
+double unit = 1e-10 / pow(0.197327, 2);
 double pars[7][3];
 double Qvalue = 0;
 
@@ -25,10 +25,10 @@ int LoadData(const double Qvalue, const char * file){
   int Npt = 0;
   while (infile >> Q[Npt] >> QT[Npt] >> ds[Npt] >> Estat[Npt]){
     if (abs(Q[Npt] - Qvalue) > 0.1) continue;
-    //Esyst[Npt] = ds[Npt] * 0.25;
+    //Esyst[Npt] = ds[Npt] * 0.15;
     Esyst[Npt] = 0;
     fprintf(fs, "%.4E\t%.4E\t%.4E\t%.4E\n",
-	    QT[Npt], ds[Npt] * unit, Estat[Npt] * unit, Esyst[Npt] * unit);
+	      QT[Npt], ds[Npt] * unit, Estat[Npt] * unit, Esyst[Npt] * unit);
     Npt++;
   }
   infile.close();
@@ -83,7 +83,7 @@ int Curve(const char * filename, const double Tf){
   FILE * fc = fopen(filename, "w");
   double theory[7];
   double error;
-  double var[6] = {Qvalue, 0.0, y, s, dPA, dPB};
+  double var[6] = {Qvalue, 0.0, asinh(sqrt(s) / Qvalue * xF / 2.0), s, dPA, dPB};
   for (int ix = 0; ix < 50; ix++){
     var[1] = 0.05 + 0.1 * ix;
     if (var[1] > Tf * Qvalue) break;
@@ -103,31 +103,12 @@ int Curve(const char * filename, const double Tf){
 
 int main(const int argc, const char * argv[]){
 
-  if (argc < 4){
-    cout << "./compare_E288 <Q> <option> <fitfile>" << endl;
+  if (argc < 3){
+    cout << "./compare_E772 <Q> <fitfile>" << endl;
     return 0;
   }
 
-  TString filename;
-  if (strcmp(argv[2], "200") == 0){
-    filename = "path/DY/DY.E288_200.list";
-    s = pow(19.4, 2);
-    y = 0.40;
-  }
-  else if (strcmp(argv[2], "300") == 0){
-    filename = "path/DY/DY.E288_300.list";
-    s = pow(23.8, 2);
-    y = 0.21;
-  }
-  else if (strcmp(argv[2], "400") == 0){
-    filename = "path/DY/DY.E288_400.list";
-    s = pow(27.4, 2);
-    y = 0.03;
-  }
-  else {
-    cout << "Wrong <option>!" << endl;
-    return 0;
-  }
+  TString filename = "path/DY/DY.E772.list";
 
   F_TMD = & F_TMD_simple;
 
@@ -137,14 +118,14 @@ int main(const int argc, const char * argv[]){
   TString curve2 = "fc1.dat";
   TString curve3 = "fc2.dat";
   LoadData(Qvalue, filename.Data());
- 
-  GetParameters(argv[3], 0);
+
+  GetParameters(argv[2], 0);
   Curve(curve1.Data(), 0.25);
-  
-  GetParameters(argv[3], 1);
+
+  GetParameters(argv[2], 1);
   Curve(curve2.Data(), 0.5);
   
-  GetParameters(argv[3], 2);
+  GetParameters(argv[2], 2);
   Curve(curve3.Data(), 1.0);
   
   return 0;

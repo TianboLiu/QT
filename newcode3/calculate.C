@@ -76,10 +76,10 @@ int EvolvedCurve(const double x, const double b, const double Q0){
   FILE * fQ = fopen("fQ.dat", "w");
   double fu[7];
   double error;
-  double Q;
-  for (int iQ = 0; iQ < 87; iQ++){
-    Q = 4.5 + 1.0 * iQ;
-    cout << Q << endl;
+  double Q = 100.0;
+  for (int iQ = 0; Q > 4.5; iQ++){
+    Q = Q0 - 0.1 * iQ;
+    //cout << Q << endl;
     for (int i = 0; i < 7; i++){
       for (int j = 0; j < 3; j++)
 	Parameters[j] = pars[i][j];
